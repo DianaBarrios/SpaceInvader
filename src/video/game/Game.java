@@ -23,11 +23,10 @@ public class Game implements Runnable {
     private Player player;                  // to use a player
     private Ball ball;                      // to use the ball
     private ArrayList<Brick> bricks;        // to store bricks
-    private ArrayList<Booster> boosters;    // to store the boosters for the player
+    //private ArrayList<Booster> boosters;    // to store the boosters for the player
     private KeyManager keyManager;          // to manage the keyboard
     private boolean gameOver;               // to end the game
     private int lives;                      // number of lives for the player
-    int playerW;                            // width of the player pad
     SoundClip playerChoque;                 // play sound on ball hit
     Random random;                          // random for booster
 
@@ -47,7 +46,6 @@ public class Game implements Runnable {
         keyManager = new KeyManager();
         gameOver = false;
         lives = 3;
-        playerW = 100;
         random = new Random();
         random.setSeed(System.nanoTime());
     }
@@ -59,9 +57,8 @@ public class Game implements Runnable {
         display = new Display(title, getWidth(), getHeight());
         Assets.init();
             // 100x100px pad
-        player = new Player(getWidth() / 2 - 50, getHeight() - 100, 
-                playerW, 100, 20, this);
-            // 20x20px ball on pad
+        player = new Player(getWidth() / 2 - 50, getHeight() - 100, 100,
+                100, this);
         ball = new Ball(getWidth() / 2 - 10, getHeight() - player.getHeight() - 20,
                 30, 30, this, 0, 0);
         bricks = new ArrayList<Brick>();
@@ -73,7 +70,7 @@ public class Game implements Runnable {
                 bricks.add(brick);
             }
         }
-        boosters = new ArrayList<Booster>();
+        //boosters = new ArrayList<Booster>();
         playerChoque = new SoundClip("/sounds/explosion.wav");
         display.getJframe().addKeyListener(keyManager);
     }
@@ -174,25 +171,19 @@ public class Game implements Runnable {
                     // if so, exchange the speeds
                 playerChoque.play();
                     // 10% probability of generating booster 
-                if(random.nextInt(100) <= 30) {
-                    boosters.add(new Booster(brick.getX() + brick.getWidth() / 4, 
-                            brick.getY() + brick.getHeight(), brick.getWidth() / 2,
-                            brick.getWidth() / 2, this));
-                }
+                
                 bricks.remove(brick);                    
             }
         }
             // make boosters fall
-        for(Booster booster : boosters) {
-            booster.tick();
-        }
+        //for(Booster booster : boosters) {
+        //    booster.tick();
+        //}
             // if ball hits floor lose a life, shorten pad width and reset ball position
         if (ball.getY() + ball.getHeight() > this.getHeight()) {
             ball.setY(ball.getY() - 1);
             setStarted(false);
             lives--;
-            playerW -= 15;
-            player.setWidth(playerW);
         }
             // game over on no lives or no bricks
         if (bricks.isEmpty() || lives == 0) {
@@ -211,21 +202,6 @@ public class Game implements Runnable {
             //sonido2.play(); 
         }
         
-            // check player collision with booster
-            // booster 1 -->> extra life
-            // booster 2 -->> increase pad length
-        for(int i = 0; i < boosters.size(); i++) {
-            Booster booster = (Booster) boosters.get(i);
-            if(player.intersects(booster)) {
-                if(booster.getBoosterType() == 1) {
-                    lives++;
-                }
-                else if(booster.getBoosterType() == 2) {
-                    playerW += 15;
-                }
-                boosters.remove(booster);
-            }
-        }
         
     }
     
@@ -253,9 +229,6 @@ public class Game implements Runnable {
                 ball.render(g);
                 for(Brick brick : bricks) {
                     brick.render(g);
-                }
-                for(Booster booster : boosters) {
-                    booster.render(g);
                 }
                     // if paused, show pause image
                     // show save, load and continue options
@@ -289,9 +262,8 @@ public class Game implements Runnable {
         lives = 3;
         started = false;
         gameOver = false;
-        playerW = 100;
-        player = new Player(getWidth() / 2 - 50, getHeight() - 100, 
-                playerW, 100, 20, this);
+        player = new Player(getWidth() / 2 - 50, getHeight() - 100, 100, 
+                20, this);
             // 20x20px ball on pad
         ball = new Ball(getWidth() / 2 - 10, getHeight() - player.getHeight() - 20,
                 30, 30, this, 0, 0);
@@ -303,8 +275,7 @@ public class Game implements Runnable {
                         width_brick - 10, 25, this);
                 bricks.add(brick);
             }
-        }
-        boosters = new ArrayList<Booster>();        
+        }    
     }
 
     /**
@@ -313,14 +284,6 @@ public class Game implements Runnable {
      */
     public ArrayList<Brick> getBricks() {
         return bricks;
-    }
-    
-    /**
-     * get the active boosters
-     * @return <code>ArrayList</code> list of boosters
-     */
-    public ArrayList<Booster> getBoosters() {
-        return boosters;
     }
     
     /**

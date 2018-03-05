@@ -46,16 +46,11 @@ public class Player extends Item {
         this.animationShoot.tick(); 
         
         if (game.getKeyManager().left){
-            setX(getX() - 10);
-            this.animationLeft.tick();
+            setX(getX() - 5);
         }
         if (game.getKeyManager().right){
-            setX(getX() + 10);
-            this.animationRight.tick();
-        }
-        
-        if(game.getKeyManager().space){
-           this.animationShoot.tick(); 
+            setX(getX() + 5);
+
         }
         
         //reset x position and y position if collision with walls
@@ -69,15 +64,9 @@ public class Player extends Item {
         
     @Override
     public void render(Graphics g) {
-        if (game.getKeyManager().left){
-            g.drawImage(animationLeft.getCurrentFrame(), getX(), getY(), 
-                getWidth(), getHeight(), null);
-        } else if (game.getKeyManager().right){
-            g.drawImage(animationRight.getCurrentFrame(), getX(), getY(), 
-             getWidth(), getHeight(), null);
-        } else {
-            g.drawImage(animationShoot.getCurrentFrame(), getX(), getY(), 
-              getWidth(), getHeight(), null);
-        } 
+       //display pacman
+       g.setColor(Color.blue);
+       g.fillRect(getX(), getY(), getWidth(), getHeight());
+
     } 
 }

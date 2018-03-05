@@ -24,9 +24,9 @@ public class Assets {
     public static BufferedImage ball;                   //to store ball image
     
     
-    
     public static void init(){
-        background = ImageLoader.loadImage("/images/labmeth.jpg");
+        background = ImageLoader.loadImage("/images/background.jpg");
+        //use pacman
         player = ImageLoader.loadImage("/images/hank.png");
         pauseImage = ImageLoader.loadImage("/images/pause1.png");
         win = ImageLoader.loadImage("/images/win.jpg");

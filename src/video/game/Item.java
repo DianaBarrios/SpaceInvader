@@ -113,15 +113,8 @@ public abstract class Item {
      * To check if the Rectangle intersects an object
      * @return <code>boolean</code> value confirming intersection
      */
-    public boolean intersects(Object obj) {
-            // if the object is a ball, use the ball's position instead of getBounds()
-        if(obj instanceof Ball) {
-            return ((Ball) obj).getEllipse().intersects(this.getBounds());
-        }
-        else {
-            return (obj instanceof Object && 
-                this.getBounds().intersects(((Item) obj).getBounds()));
-        }
-        
+    public boolean intersects(Object obj) {        
+        return (obj instanceof Object && 
+            this.getBounds().intersects(((Item) obj).getBounds()));
     }
 }

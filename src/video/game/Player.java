@@ -39,10 +39,10 @@ public class Player extends Item {
     public void tick() {
             //moving player depending on flags
         if (game.getKeyManager().left){
-            setX(getX() - 10);
+            setX(getX() - 5);
         }
         if (game.getKeyManager().right){
-            setX(getX() + 10);
+            setX(getX() + 5);
         }
         
             //reset x position and y position if collision with walls
@@ -55,6 +55,7 @@ public class Player extends Item {
         
     @Override
     public void render(Graphics g) {
+       //display pacman
        g.setColor(Color.blue);
        g.fillRect(getX(), getY(), getWidth(), getHeight());
     } 

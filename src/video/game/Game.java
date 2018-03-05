@@ -3,7 +3,6 @@ package video.game;
 import java.awt.Graphics;
 import java.awt.image.BufferStrategy;
 import java.util.ArrayList;
-import java.util.Random;
 
 /**
  *
@@ -21,15 +20,13 @@ public class Game implements Runnable {
     private boolean running;                // to set the game
     private boolean started;                // to start the game
     private Player player;                  // to use a player
-    private Ball ball;                      // to use the ball
-    private ArrayList<Brick> bricks;        // to store bricks
-    private ArrayList<Booster> boosters;    // to store the boosters for the player
+    private ArrayList<Bullet> bullets;      // to store the shots fired by the player
+    private ArrayList<Ghosts> ghosts;       // to store ghosts
     private KeyManager keyManager;          // to manage the keyboard
     private boolean gameOver;               // to end the game
     private int lives;                      // number of lives for the player
-    int playerW;                            // width of the player pad
-    SoundClip playerChoque;                 // play sound on ball hit
-    Random random;                          // random for booster
+    private int score;                      // player score
+    private int moveDist;                   // ghosts horizontal distance
 
     /**
      * to create title, width and height and set the game
@@ -47,9 +44,9 @@ public class Game implements Runnable {
         keyManager = new KeyManager();
         gameOver = false;
         lives = 3;
-        playerW = 100;
-        random = new Random();
-        random.setSeed(System.nanoTime());
+        score = 0;
+        // distance -> this.width() - (7*ghostWidth + 6*spacing + 2*margin)
+        moveDist = width - (7*75 + 6*5 + 2*10);
     }
 
     /**
@@ -58,23 +55,27 @@ public class Game implements Runnable {
     private void init() {
         display = new Display(title, getWidth(), getHeight());
         Assets.init();
-            // 100x100px pad
+            // generar player
         player = new Player(getWidth() / 2 - 50, getHeight() - 100, 
-                playerW, 100, 20, this);
-            // 20x20px ball on pad
-        ball = new Ball(getWidth() / 2 - 10, getHeight() - player.getHeight() - 20,
-                30, 30, this, 0, 0);
-        bricks = new ArrayList<Brick>();
-        for (int i = 0; i < 10; i++) {
+                100, 100, 20, this);
+        ghosts = new ArrayList<Ghosts>();
+        //create ghosts
+        for(int i = 0; i < 7; i++) {
+            for(int j = 0; j < 5; j++) {
+                ghosts.add(new Ghosts(10+i*(75+5), 10+j*75, 75, 75, this, 5));
+            }
+        }
+        /*
+        for (int i = 0; i < 7; i++) {
             for (int j = 0; j < 5; j++) {
                 int width_brick = getWidth() / 10;
                 Brick brick = new Brick(i * width_brick + 2, 30 * j + 5,
                         width_brick - 10, 25, this);
-                bricks.add(brick);
+                ghosts.add(brick);
             }
-        }
-        boosters = new ArrayList<Booster>();
-        playerChoque = new SoundClip("/sounds/explosion.wav");
+        }*/
+        //create bullets
+        bullets = new ArrayList<Bullet>();
         display.getJframe().addKeyListener(keyManager);
     }
 
@@ -129,7 +130,6 @@ public class Game implements Runnable {
      */
     private void tick() {
         keyManager.tick();
-        
             // save and load file, only when paused
         if(keyManager.save && keyManager.pause) {
             Files.saveFile(this);
@@ -137,96 +137,34 @@ public class Game implements Runnable {
         if(keyManager.load && keyManager.pause) {
             Files.loadFile(this);
         }
-            // if just started and pressed space, release ball
-        if (this.getKeyManager().space && !this.isStarted()) {
-            ball.setSpeedX(3);
-            ball.setSpeedY(-4);
-            this.setStarted(true);
+        player.tick();
+        //create bullet 20px wide, 20px high
+        if(keyManager.space) {
+            bullets.add(new Bullet(player.getX()+player.getWidth()/2-10, 
+            player.getY()-10, 10, 10, this));
         }
-            // if the game was not started, permit movement of player and ball as one
-        if (!this.isStarted()) {
-            player.tick();
-            ball.setX(player.getX() + player.getWidth() / 2 - ball.getWidth() / 2);
-            ball.setY(player.getY() - ball.getHeight());
-        } else {
-            player.tick();
-            ball.tick();
+        //make ghosts move x amount total, when total is reached, invert speed
+        for(Ghosts ghost : ghosts) {
+            ghost.tick();
         }
-            // checking ball crash with bricks
-        for (int i = 0; i < bricks.size(); i++) {
-            Brick brick = (Brick) bricks.get(i);
-            if (brick.intersects(ball)) {
-                    // if ball collides on right or left wall, invert X speed
-                    // if ball collides on top or bot wall invert Y
-                if((ball.getX() + ball.getWidth() >= brick.getX() || 
-                        brick.getX() + brick.getWidth() <= ball.getX()) && 
-                        (ball.getY() + ball.getHeight()/2 <= brick.getHeight() + 
-                        brick.getY() && ball.getY() + ball.getHeight()/2 >= brick.getY())) {
-                    ball.setSpeedX(ball.getSpeedX() * -1);
+        //move bullets
+        for(int i = 0; i < bullets.size(); i++) {
+            Bullet bullet = (Bullet) bullets.get(i);
+            bullet.tick();
+            for(int j = 0; j < ghosts.size(); j++) {
+                Ghosts ghost = (Ghosts) ghosts.get(j);
+                if(bullet.intersects(ghost)) {
+                    score += 10;
+                    ghosts.remove(j);
+                    bullets.remove(i);
+                    break;
                 }
-                if((ball.getY() + ball.getHeight() >= brick.getY() ||
-                        brick.getY() + brick.getHeight() >= ball.getY()) &&
-                        (ball.getX() + ball.getWidth()/2 >= brick.getX() &&
-                        brick.getX() + brick.getWidth() >= ball.getX())) {
-                    ball.setSpeedY(ball.getSpeedY() * -1);
-                }
-                    // if speedX and speedY changed, means a border was hit,
-                    // if so, exchange the speeds
-                playerChoque.play();
-                    // 10% probability of generating booster 
-                if(random.nextInt(100) <= 30) {
-                    boosters.add(new Booster(brick.getX() + brick.getWidth() / 4, 
-                            brick.getY() + brick.getHeight(), brick.getWidth() / 2,
-                            brick.getWidth() / 2, this));
-                }
-                bricks.remove(brick);                    
             }
-        }
-            // make boosters fall
-        for(Booster booster : boosters) {
-            booster.tick();
-        }
-            // if ball hits floor lose a life, shorten pad width and reset ball position
-        if (ball.getY() + ball.getHeight() > this.getHeight()) {
-            ball.setY(ball.getY() - 1);
-            setStarted(false);
-            lives--;
-            playerW -= 15;
-            player.setWidth(playerW);
         }
             // game over on no lives or no bricks
-        if (bricks.isEmpty() || lives == 0) {
+        if (ghosts.isEmpty() || lives == 0) {
             gameOver = true;
-        }
-            //change the direction in y of the ball when it hits the player
-            // if ball hits the edges, 
-        if (player.intersects(ball)) {
-            if(player.getX() + 10 > ball.getX() ||
-                    ball.getX() >= player.getX() + player.getWidth() - 10) {
-                ball.setSpeedX(ball.getSpeedX()*-1);
-            }
-            if(player.getY() + player.getHeight()/2 > ball.getY() + ball.getHeight()/2) {
-                ball.setSpeedY(ball.getSpeedY() * -1);
-            }
-            //sonido2.play(); 
-        }
-        
-            // check player collision with booster
-            // booster 1 -->> extra life
-            // booster 2 -->> increase pad length
-        for(int i = 0; i < boosters.size(); i++) {
-            Booster booster = (Booster) boosters.get(i);
-            if(player.intersects(booster)) {
-                if(booster.getBoosterType() == 1) {
-                    lives++;
-                }
-                else if(booster.getBoosterType() == 2) {
-                    playerW += 15;
-                }
-                boosters.remove(booster);
-            }
-        }
-        
+        }        
     }
     
     /**
@@ -250,13 +188,9 @@ public class Game implements Runnable {
             if (!gameOver) {
                     // paint player, ball, bricks and any booster
                 player.render(g);
-                ball.render(g);
-                for(Brick brick : bricks) {
-                    brick.render(g);
-                }
-                for(Booster booster : boosters) {
-                    booster.render(g);
-                }
+                //render bullets
+                //render ghosts
+                    
                     // if paused, show pause image
                     // show save, load and continue options
                 if (this.getKeyManager().pause) {
@@ -281,6 +215,10 @@ public class Game implements Runnable {
             g.dispose();
         }
     }
+
+    public int getMoveDist() {
+        return moveDist;
+    }
     
     /**
      * function to restart the game
@@ -289,40 +227,17 @@ public class Game implements Runnable {
         lives = 3;
         started = false;
         gameOver = false;
-        playerW = 100;
         player = new Player(getWidth() / 2 - 50, getHeight() - 100, 
-                playerW, 100, 20, this);
-            // 20x20px ball on pad
-        ball = new Ball(getWidth() / 2 - 10, getHeight() - player.getHeight() - 20,
-                30, 30, this, 0, 0);
-        bricks = new ArrayList<Brick>();
-        for (int i = 0; i < 10; i++) {
-            for (int j = 0; j < 5; j++) {
-                int width_brick = getWidth() / 10;
-                Brick brick = new Brick(i * width_brick + 2, 30 * j + 5,
-                        width_brick - 10, 25, this);
-                bricks.add(brick);
+                100, 100, 20, this);
+        //regenerate ghosts
+        for(int i = 0; i < 7; i++) {
+            for(int j = 0; j < 5; j++) {
+                ghosts.add(new Ghosts(10+i*(75+5), 10+j*75, 75, 75, this, 5));
             }
         }
-        boosters = new ArrayList<Booster>();        
+        bullets = new ArrayList<Bullet>();
     }
 
-    /**
-     * get the list of bricks
-     * @return <code>ArrayList</code> a list of bricks
-     */
-    public ArrayList<Brick> getBricks() {
-        return bricks;
-    }
-    
-    /**
-     * get the active boosters
-     * @return <code>ArrayList</code> list of boosters
-     */
-    public ArrayList<Booster> getBoosters() {
-        return boosters;
-    }
-    
     /**
      * To get the width of the game window
      * @return an <code>int</code> value with the width

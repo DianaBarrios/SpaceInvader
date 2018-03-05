@@ -14,22 +14,17 @@ public class Assets {
     public static BufferedImage win;                    //to store victory image
     public static BufferedImage fail;                   //to store fail image
     public static BufferedImage ball;                   //to store ball image
-    public static BufferedImage plusOne[];              //to store plus one buff
-    public static BufferedImage lengthPlus[];             //store increase length buff
     
     
     public static void init(){
-        background = ImageLoader.loadImage("/images/labmeth.jpg");
+        background = ImageLoader.loadImage("/images/background.jpg");
+        //use pacman
         player = ImageLoader.loadImage("/images/hank.png");
+        //set pause
         pauseImage = ImageLoader.loadImage("/images/walter.png");
         win = ImageLoader.loadImage("/images/win.jpg");
         fail = ImageLoader.loadImage("/images/fail.png");
-        brick = ImageLoader.loadImage("/images/meth.jpg");
-        plusOne = new BufferedImage[2];
-        plusOne[0] = ImageLoader.loadImage("/images/plusone.png");
-        plusOne[1] = ImageLoader.loadImage("/images/plusoneRev.png");
-        lengthPlus = new BufferedImage[1];
-        lengthPlus[0] = ImageLoader.loadImage("/images/plusSize.png");
-        
+        //use ghost sprites
+        brick = ImageLoader.loadImage("/images/meth.jpg");        
     }
 }

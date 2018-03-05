@@ -28,6 +28,7 @@ public class Game implements Runnable {
     private int score;                      // player score
     private int moveDist;                   // ghosts horizontal distance
 
+
     /**
      * to create title, width and height and set the game
      *
@@ -65,8 +66,7 @@ public class Game implements Runnable {
                 ghosts.add(new Ghosts(10+i*(75+5), 10+j*75, 75, 75, this, 5));
             }
         }
-        /*
-        for (int i = 0; i < 7; i++) {
+
             for (int j = 0; j < 5; j++) {
                 int width_brick = getWidth() / 10;
                 Brick brick = new Brick(i * width_brick + 2, 30 * j + 5,
@@ -161,10 +161,12 @@ public class Game implements Runnable {
                 }
             }
         }
+
             // game over on no lives or no bricks
         if (ghosts.isEmpty() || lives == 0) {
             gameOver = true;
         }        
+
     }
     
     /**
@@ -191,6 +193,7 @@ public class Game implements Runnable {
                 //render bullets
                 //render ghosts
                     
+
                     // if paused, show pause image
                     // show save, load and continue options
                 if (this.getKeyManager().pause) {
@@ -239,6 +242,7 @@ public class Game implements Runnable {
     }
 
     /**
+
      * To get the width of the game window
      * @return an <code>int</code> value with the width
      */

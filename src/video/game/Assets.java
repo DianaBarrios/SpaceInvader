@@ -16,20 +16,27 @@ public class Assets {
     public static BufferedImage ghostRed[];             //to store the red ghosts   
     public static BufferedImage ghostPink[];            //to store the pink ghosts   
     public static BufferedImage ghostBlue[];            //to store the blue ghosts   
-    public static BufferedImage ghostOrange[];          //to store the orange ghosts   
+    public static BufferedImage ghostOrange[];          //to store the orange ghosts 
+    public static BufferedImage ghostRedInverse[];      //to store the red inverse ghosts   
+    public static BufferedImage ghostPinkInverse[];     //to store the pink inverse ghosts   
+    public static BufferedImage ghostBlueInverse[];     //to store the blue inverse ghosts   
+    public static BufferedImage ghostOrangeInverse[];   //to store the orange inverse ghosts 
+    public static BufferedImage brick;                  //to store brick image
     public static BufferedImage pauseImage;             //to store the pause image
     public static BufferedImage win;                    //to store victory image
     public static BufferedImage fail;                   //to store fail image
     public static BufferedImage ball;                   //to store ball image
     
     
+    
     public static void init(){
-        background = ImageLoader.loadImage("/images/backgorund.jpg");
-        //use pacman
+        background = ImageLoader.loadImage("/images/labmeth.jpg");
+        player = ImageLoader.loadImage("/images/hank.png");
         pauseImage = ImageLoader.loadImage("/images/pause1.png");
         win = ImageLoader.loadImage("/images/win.jpg");
         fail = ImageLoader.loadImage("/images/fail.png");
         sprites = ImageLoader.loadImage("/images/pacmam.png");
+        brick = ImageLoader.loadImage( "/images/meth.jpg");
         
         //Creating array of images before animations
         SpriteSheet spritesheet;
@@ -43,6 +50,10 @@ public class Assets {
         ghostPink  = new BufferedImage[2];
         ghostBlue  = new BufferedImage[2];
         ghostOrange = new BufferedImage[2];
+        ghostRedInverse  = new BufferedImage[2];
+        ghostPinkInverse  = new BufferedImage[2];
+        ghostBlueInverse = new BufferedImage[2];
+        ghostOrangeInverse = new BufferedImage[2];
         
         //cropping the pictures from the sheet into the array
         for (int i = 0; i < 2; i++){
@@ -53,6 +64,10 @@ public class Assets {
             ghostPink[i] = spritesheet.crop(i * 17, 80, 16, 16);
             ghostBlue[i] = spritesheet.crop(i * 17, 96, 16, 16);
             ghostOrange[i] = spritesheet.crop(i * 17, 112, 16, 16);
+            ghostRedInverse[i] = spritesheet.crop((i * 17) + 33, 64, 16, 16);
+            ghostPinkInverse[i] = spritesheet.crop((i * 17) + 33, 80, 16, 16);
+            ghostBlueInverse[i] = spritesheet.crop((i * 17) + 33 , 96, 16, 16);
+            ghostOrangeInverse[i] = spritesheet.crop((i * 17) + 33, 112, 16, 16);
         }
     }
 }

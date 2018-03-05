@@ -47,33 +47,24 @@ public class Game implements Runnable {
         lives = 3;
         score = 0;
         // distance -> this.width() - (7*ghostWidth + 6*spacing + 2*margin)
-        moveDist = width - (7*75 + 6*5 + 2*10);
+        moveDist = width - (12*50 + 11*10 + 2*10);
     }
 
     /**
      * initializing the game assets and objects
-     */
+     **/
     private void init() {
         display = new Display(title, getWidth(), getHeight());
         Assets.init();
             // generar player
-        player = new Player(getWidth() / 2 - 50, getHeight() - 100, 
-                100, 100, 20, this);
+        player = new Player(getWidth() / 2 - 50, getHeight() - 100, 100, 100, this);
         ghosts = new ArrayList<Ghosts>();
         //create ghosts
-        for(int i = 0; i < 7; i++) {
+        for(int i = 0; i < 12; i++) {
             for(int j = 0; j < 5; j++) {
-                ghosts.add(new Ghosts(10+i*(75+5), 10+j*75, 75, 75, this, 5));
+                ghosts.add(new Ghosts(10+i*(50+10), 10+j*50, 50, 50, this, 2));
             }
         }
-
-            for (int j = 0; j < 5; j++) {
-                int width_brick = getWidth() / 10;
-                Brick brick = new Brick(i * width_brick + 2, 30 * j + 5,
-                        width_brick - 10, 25, this);
-                ghosts.add(brick);
-            }
-        }*/
         //create bullets
         bullets = new ArrayList<Bullet>();
         display.getJframe().addKeyListener(keyManager);
@@ -143,7 +134,6 @@ public class Game implements Runnable {
             bullets.add(new Bullet(player.getX()+player.getWidth()/2-10, 
             player.getY()-10, 10, 10, this));
         }
-        //make ghosts move x amount total, when total is reached, invert speed
         for(Ghosts ghost : ghosts) {
             ghost.tick();
         }
@@ -190,8 +180,12 @@ public class Game implements Runnable {
             if (!gameOver) {
                     // paint player, ball, bricks and any booster
                 player.render(g);
-                //render bullets
-                //render ghosts
+                for(Bullet bullet : bullets) {
+                    bullet.render(g);
+                }
+                for(Ghosts ghost : ghosts) {
+                    ghost.render(g);
+                }
                     
 
                     // if paused, show pause image
@@ -231,7 +225,7 @@ public class Game implements Runnable {
         started = false;
         gameOver = false;
         player = new Player(getWidth() / 2 - 50, getHeight() - 100, 
-                100, 100, 20, this);
+                100, 100, this);
         //regenerate ghosts
         for(int i = 0; i < 7; i++) {
             for(int j = 0; j < 5; j++) {

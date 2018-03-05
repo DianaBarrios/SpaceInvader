@@ -12,6 +12,12 @@ public class Ghosts extends Item{
     private Game game;
     private int speedX;
     private int moved;
+    private int type;
+    
+    private Animation animationRed;
+    private Animation animationPink;
+    private Animation animationBlue;
+    private Animation animationOrange;
     
     /**
      * create a brick object
@@ -27,6 +33,11 @@ public class Ghosts extends Item{
         this.game = game;
         this.speedX = speedX;
         moved = 0;
+        type = (int) (Math.random()*4);
+        this.animationRed = new Animation(Assets.ghostRed, 100);
+        this.animationPink = new Animation(Assets.ghostPink, 100);
+        this.animationBlue = new Animation(Assets.ghostBlue, 100);
+        this.animationOrange = new Animation(Assets.ghostOrange, 100);
     }
 
     public int getSpeedX() {
@@ -41,15 +52,30 @@ public class Ghosts extends Item{
     public void tick() {
         setX(getX() + speedX);
         moved += speedX;
-        if(moved >= game.getMoveDist()) {
+        if(Math.abs(moved) >= game.getMoveDist()) {
             moved = 0;
             setY(getY() + 5);
             speedX = -speedX;
         }
+        animationRed.tick();
+        animationBlue.tick();
+        animationPink.tick();
+        animationOrange.tick();
     }
 
     @Override
     public void render(Graphics g) {
-        g.drawImage(Assets.brick, getX(), getY(), getWidth(), getHeight(), null);
+        if(type == 0) {
+            g.drawImage(animationRed.getCurrentFrame(), getX(), getY(), getWidth(), getHeight(), null);
+        }
+        else if(type == 1) {
+            g.drawImage(animationPink.getCurrentFrame(), getX(), getY(), getWidth(), getHeight(), null);
+        }
+        else if(type == 2) {
+            g.drawImage(animationBlue.getCurrentFrame(), getX(), getY(), getWidth(), getHeight(), null);
+        }
+        else {
+            g.drawImage(animationOrange.getCurrentFrame(), getX(), getY(), getWidth(), getHeight(), null);
+        }
     }
 }

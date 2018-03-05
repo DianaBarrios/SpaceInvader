@@ -17,7 +17,6 @@ public class Assets {
     public static BufferedImage ghostPink[];            //to store the pink ghosts   
     public static BufferedImage ghostBlue[];            //to store the blue ghosts   
     public static BufferedImage ghostOrange[];          //to store the orange ghosts   
-    public static BufferedImage brick;                  //to store brick image
     public static BufferedImage pauseImage;             //to store the pause image
     public static BufferedImage win;                    //to store victory image
     public static BufferedImage fail;                   //to store fail image
@@ -25,14 +24,12 @@ public class Assets {
     
     
     public static void init(){
-        background = ImageLoader.loadImage("/images/background.jpg");
+        background = ImageLoader.loadImage("/images/backgorund.jpg");
         //use pacman
-        player = ImageLoader.loadImage("/images/hank.png");
         pauseImage = ImageLoader.loadImage("/images/pause1.png");
         win = ImageLoader.loadImage("/images/win.jpg");
         fail = ImageLoader.loadImage("/images/fail.png");
         sprites = ImageLoader.loadImage("/images/pacmam.png");
-        brick = ImageLoader.loadImage( "/images/meth.jpg");
         
         //Creating array of images before animations
         SpriteSheet spritesheet;

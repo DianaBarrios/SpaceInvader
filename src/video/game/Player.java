@@ -19,7 +19,6 @@ public class Player extends Item {
      * To build a player object
      * @param x an <code>int</code> value to get the x coordinate
      * @param y an <code>int</code> value to get the y coordinate
-     * @param direction an <code>int</code> value to get the direction
      * @param width an <code>int</code> value to get the width
      * @param height an <code>int</code> value to get the height
      * @param game a <code>game</code> object to get outside elements
@@ -47,10 +46,11 @@ public class Player extends Item {
         
         if (game.getKeyManager().left){
             setX(getX() - 5);
+            animationLeft.tick();
         }
         if (game.getKeyManager().right){
             setX(getX() + 5);
-
+            animationRight.tick();
         }
         
         //reset x position and y position if collision with walls
@@ -64,9 +64,16 @@ public class Player extends Item {
         
     @Override
     public void render(Graphics g) {
-       //display pacman
-       g.setColor(Color.blue);
-       g.fillRect(getX(), getY(), getWidth(), getHeight());
+        //display pacman
+        if(game.getKeyManager().left) {
+            g.drawImage(animationLeft.getCurrentFrame(), getX(), getY(), getWidth(), getHeight(), null);
+        }
+        else if (game.getKeyManager().right) {
+            g.drawImage(animationRight.getCurrentFrame(), getX(), getY(), getWidth(), getHeight(), null);
+        }
+        else /*(game.getKeyManager().space) */{
+            g.drawImage(animationShoot.getCurrentFrame(), getX(), getY(), getWidth(), getHeight(), null);
+        }
 
     } 
 }

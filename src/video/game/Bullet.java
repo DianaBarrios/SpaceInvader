@@ -1,5 +1,6 @@
 package video.game;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.geom.Ellipse2D;
 
@@ -33,6 +34,7 @@ class Bullet extends Item {
     @Override
     public void render(Graphics g) {
         //display bullet
-        g.drawImage(Assets.player, getX(), getY(), getWidth(), getHeight(), null);
+        g.setColor(Color.white);
+        g.fillOval(getX(), getY(), getWidth(), getHeight());
     }
 }

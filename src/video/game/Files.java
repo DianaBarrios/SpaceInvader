@@ -35,7 +35,7 @@ public class Files {
             int NumBri = Integer.parseInt(line);
             
                 // clean bricks
-            game.getBricks().clear();
+            //game.getBricks().clear();
             
                 // add bricks to list
             for (int i = 0; i < NumBri; i++){
@@ -44,13 +44,12 @@ public class Files {
                 int x = Integer.parseInt(parts[0]);
                 int y = Integer.parseInt(parts[1]);
                 
-                Brick brick = new Brick(x, y, game.getWidth()/10, 25, game);
+                //Brick brick = new Brick(x, y, game.getWidth()/10, 25, game);
                         
-                game.getBricks().add(brick);
+                //game.getBricks().add(brick);
                 
             }
-        }     
-         catch (IOException ioe){
+        }catch (IOException ioe){
             System.out.println("No hay saves " + ioe.toString());
         }
     }
@@ -60,10 +59,10 @@ public class Files {
             PrintWriter writer = new PrintWriter(new FileWriter("saves/Save.txt"));
             writer.println("" + game.getPlayer().getX() + "," 
                     + game.getPlayer().getY());
-            writer.println("" + game.getBricks().size());
-            for (Brick brick : game.getBricks()){
-                writer.println("" + brick.getX() + "," + brick.getY());
-            }
+            //writer.println("" + game.getBricks().size());
+            //for (Brick brick : game.getBricks()){
+            //    writer.println("" + brick.getX() + "," + brick.getY());
+            //}
             writer.close();
         } catch (IOException ioe){
             System.out.println("Se lleno el Disco Duro, no se puede guardar" + 

@@ -8,7 +8,6 @@ import java.awt.image.BufferedImage;
  */
 public class Assets {
     public static BufferedImage background;             //to store background image
-    public static BufferedImage player;                 //to store player image
     public static BufferedImage sprites;                //to store the sprites
     public static BufferedImage playerRight[];          //to store the player right images
     public static BufferedImage playerShoot[];          //to store the player shoot images
@@ -21,22 +20,18 @@ public class Assets {
     public static BufferedImage ghostPinkInverse[];     //to store the pink inverse ghosts   
     public static BufferedImage ghostBlueInverse[];     //to store the blue inverse ghosts   
     public static BufferedImage ghostOrangeInverse[];   //to store the orange inverse ghosts 
-    public static BufferedImage brick;                  //to store brick image
     public static BufferedImage pauseImage;             //to store the pause image
     public static BufferedImage win;                    //to store victory image
     public static BufferedImage fail;                   //to store fail image
-    public static BufferedImage ball;                   //to store ball image
     
     
     
     public static void init(){
-        background = ImageLoader.loadImage("/images/labmeth.jpg");
-        player = ImageLoader.loadImage("/images/hank.png");
+        background = ImageLoader.loadImage("/images/backgorund.jpg");
         pauseImage = ImageLoader.loadImage("/images/pause1.png");
         win = ImageLoader.loadImage("/images/win.jpg");
         fail = ImageLoader.loadImage("/images/fail.png");
         sprites = ImageLoader.loadImage("/images/pacmam.png");
-        brick = ImageLoader.loadImage( "/images/meth.jpg");
         
         //Creating array of images before animations
         SpriteSheet spritesheet;

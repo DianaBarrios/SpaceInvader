@@ -14,6 +14,9 @@ public class Ghosts extends Item{
     private int moved;
     private int type;
     
+    private Timer timer;
+    private boolean action;
+    
     private Animation animationRed;
     private Animation animationPink;
     private Animation animationBlue;
@@ -55,7 +58,7 @@ public class Ghosts extends Item{
             this.animationOrange = new Animation(Assets.ghostOrange, 100);
             this.animationOrangeReverse = new Animation(Assets.ghostOrangeInverse, 100);
         }
-        
+        timer = new Timer((int) (Math.random()*15 + 5));
     }
 
     public int getSpeedX() {
@@ -66,15 +69,23 @@ public class Ghosts extends Item{
         this.speedX = speedX;
     }    
     
+    public boolean isAction() {
+        return action;
+    }
+    
     @Override
     public void tick() {
+        action = timer.isAction();
+        
         setX(getX() + speedX);
         moved += speedX;
+        
         if(Math.abs(moved) >= game.getMoveDist()) {
             moved = 0;
             setY(getY() + 5);
             speedX = -speedX;
         }
+        
         if(type == 0) {
             this.animationRed.tick();
             this.animationRedReverse.tick();
@@ -91,6 +102,7 @@ public class Ghosts extends Item{
             this.animationOrange.tick();
             this.animationOrangeReverse.tick();
         }
+        timer.tick();
     }
 
     @Override

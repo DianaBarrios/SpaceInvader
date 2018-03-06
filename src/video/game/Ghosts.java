@@ -18,6 +18,11 @@ public class Ghosts extends Item{
     private Animation animationPink;
     private Animation animationBlue;
     private Animation animationOrange;
+    private Animation animationRedReverse;
+    private Animation animationPinkReverse;
+    private Animation animationBlueReverse;
+    private Animation animationOrangeReverse;
+ 
     
     /**
      * create a brick object
@@ -34,10 +39,23 @@ public class Ghosts extends Item{
         this.speedX = speedX;
         moved = 0;
         type = (int) (Math.random()*4);
-        this.animationRed = new Animation(Assets.ghostRed, 100);
-        this.animationPink = new Animation(Assets.ghostPink, 100);
-        this.animationBlue = new Animation(Assets.ghostBlue, 100);
-        this.animationOrange = new Animation(Assets.ghostOrange, 100);
+        if(type == 0) {
+            this.animationRed = new Animation(Assets.ghostRed, 100);
+            this.animationRedReverse = new Animation(Assets.ghostRedInverse, 100);
+        }
+        else if(type == 1) {
+            this.animationPink = new Animation(Assets.ghostPink, 100);
+            this.animationPinkReverse = new Animation(Assets.ghostPinkInverse, 100);
+        }
+        else if (type == 2) {
+            this.animationBlue = new Animation(Assets.ghostBlue, 100);
+            this.animationBlueReverse = new Animation(Assets.ghostBlueInverse, 100);
+        }
+        else {
+            this.animationOrange = new Animation(Assets.ghostOrange, 100);
+            this.animationOrangeReverse = new Animation(Assets.ghostOrangeInverse, 100);
+        }
+        
     }
 
     public int getSpeedX() {
@@ -57,25 +75,57 @@ public class Ghosts extends Item{
             setY(getY() + 5);
             speedX = -speedX;
         }
-        animationRed.tick();
-        animationBlue.tick();
-        animationPink.tick();
-        animationOrange.tick();
+        if(type == 0) {
+            this.animationRed.tick();
+            this.animationRedReverse.tick();
+        }
+        else if(type == 1) {
+            this.animationPink.tick();
+            this.animationPinkReverse.tick();
+        }
+        else if (type == 2) {
+            this.animationBlue.tick();
+            this.animationBlueReverse.tick();
+        }
+        else {
+            this.animationOrange.tick();
+            this.animationOrangeReverse.tick();
+        }
     }
 
     @Override
     public void render(Graphics g) {
         if(type == 0) {
-            g.drawImage(animationRed.getCurrentFrame(), getX(), getY(), getWidth(), getHeight(), null);
+            if(speedX > 0) {
+                g.drawImage(animationRed.getCurrentFrame(), getX(), getY(), getWidth(), getHeight(), null);
+            }
+            else {
+                g.drawImage(animationRedReverse.getCurrentFrame(), getX(), getY(), getWidth(), getHeight(), null);
+            }
         }
         else if(type == 1) {
-            g.drawImage(animationPink.getCurrentFrame(), getX(), getY(), getWidth(), getHeight(), null);
+            if(speedX > 0) {
+                g.drawImage(animationPink.getCurrentFrame(), getX(), getY(), getWidth(), getHeight(), null);
+            }
+            else {
+                g.drawImage(animationPinkReverse.getCurrentFrame(), getX(), getY(), getWidth(), getHeight(), null);
+            }
         }
         else if(type == 2) {
-            g.drawImage(animationBlue.getCurrentFrame(), getX(), getY(), getWidth(), getHeight(), null);
+            if (speedX > 0) {
+                g.drawImage(animationBlue.getCurrentFrame(), getX(), getY(), getWidth(), getHeight(), null);
+            }
+            else {
+                g.drawImage(animationBlueReverse.getCurrentFrame(), getX(), getY(), getWidth(), getHeight(), null);
+            }
         }
         else {
-            g.drawImage(animationOrange.getCurrentFrame(), getX(), getY(), getWidth(), getHeight(), null);
+            if (speedX > 0) {
+                g.drawImage(animationOrange.getCurrentFrame(), getX(), getY(), getWidth(), getHeight(), null);
+            }
+            else {
+                g.drawImage(animationOrangeReverse.getCurrentFrame(), getX(), getY(), getWidth(), getHeight(), null);
+            }
         }
     }
 }

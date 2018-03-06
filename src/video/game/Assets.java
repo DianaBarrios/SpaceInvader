@@ -29,8 +29,8 @@ public class Assets {
     public static void init(){
         background = ImageLoader.loadImage("/images/backgorund.jpg");
         pauseImage = ImageLoader.loadImage("/images/pause1.png");
-        win = ImageLoader.loadImage("/images/win.jpg");
-        fail = ImageLoader.loadImage("/images/fail.png");
+        win = ImageLoader.loadImage("/images/youwin.png");
+        fail = ImageLoader.loadImage("/images/gameover.jpg");
         sprites = ImageLoader.loadImage("/images/pacmam.png");
         
         //Creating array of images before animations

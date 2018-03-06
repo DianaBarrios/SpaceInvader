@@ -2,7 +2,6 @@ package video.game;
 
 import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.geom.Ellipse2D;
 
 /**
  *
@@ -10,7 +9,6 @@ import java.awt.geom.Ellipse2D;
  */
 class Bullet extends Item {
     private Game game;
-    private int speedX;
     private int speedY;
     
     /**
@@ -21,20 +19,21 @@ class Bullet extends Item {
      * @param height <code>int</code> value for the height
      * @param game <code>Game</code> object to access game resources
      */
-    public Bullet(int x, int y, int width, int height, Game game){
+    public Bullet(int x, int y, int width, int height, Game game, int speedY){
         super(x, y, width, height);
         this.game = game;
+        this.speedY = speedY;
     }
     
     @Override
     public void tick() {
-        setY(getY() - 3);
+        setY(getY() + speedY);
     }
 
     @Override
     public void render(Graphics g) {
         //display bullet
-        g.setColor(Color.white);
+        //g.setColor(Color.white);
         g.fillOval(getX(), getY(), getWidth(), getHeight());
     }
 }

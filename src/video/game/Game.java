@@ -1,5 +1,6 @@
 package video.game;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.image.BufferStrategy;
 import java.util.ArrayList;
@@ -21,6 +22,7 @@ public class Game implements Runnable {
     private boolean started;                // to start the game
     private Player player;                  // to use a player
     private ArrayList<Bullet> bullets;      // to store the shots fired by the player
+    private ArrayList<Bullet> enemyShot;    // enemy shots taken
     private ArrayList<Ghosts> ghosts;       // to store ghosts
     private KeyManager keyManager;          // to manage the keyboard
     private boolean gameOver;               // to end the game
@@ -67,6 +69,7 @@ public class Game implements Runnable {
         }
         //create bullets
         bullets = new ArrayList<Bullet>();
+        enemyShot = new ArrayList<Bullet>();
         display.getJframe().addKeyListener(keyManager);
     }
 
@@ -132,10 +135,14 @@ public class Game implements Runnable {
         //create bullet 20px wide, 20px high
         if(keyManager.space) {
             bullets.add(new Bullet(player.getX()+player.getWidth()/2-10, 
-            player.getY()-10, 10, 10, this));
+                    player.getY()-10, 10, 10, this, -3));
         }
         for(Ghosts ghost : ghosts) {
             ghost.tick();
+            if (ghost.isAction()) {
+                enemyShot.add(new Bullet(ghost.getX()+ghost.getWidth()/2-10, 
+                        ghost.getY()+ghost.getHeight(),10,10,this,3));
+            }
         }
         //move bullets
         for(int i = 0; i < bullets.size(); i++) {
@@ -147,11 +154,30 @@ public class Game implements Runnable {
                     score += 10;
                     ghosts.remove(j);
                     bullets.remove(i);
+                    --i;
+                    --j;
                     break;
+                }
+                if(ghost.getY() <= 0) {
+                    ghosts.remove(j);
+                    --j;
                 }
             }
         }
-
+        for(int i = 0; i < enemyShot.size(); i++) {
+            Bullet bullet = (Bullet) enemyShot.get(i);
+            bullet.tick();
+            if (bullet.intersects(player)) {
+                --lives;
+                enemyShot.remove(i);
+                --i;
+            }
+            if(bullet.getY() > this.getHeight()) {
+                enemyShot.remove(i);
+                --i;
+            }
+        }
+        
             // game over on no lives or no bricks
         if (ghosts.isEmpty() || lives == 0) {
             gameOver = true;
@@ -181,12 +207,16 @@ public class Game implements Runnable {
                     // paint player, ball, bricks and any booster
                 player.render(g);
                 for(Bullet bullet : bullets) {
+                    g.setColor(Color.white);
                     bullet.render(g);
                 }
                 for(Ghosts ghost : ghosts) {
                     ghost.render(g);
                 }
-                    
+                for(Bullet bullet : enemyShot) {
+                    g.setColor(Color.red);
+                    bullet.render(g);
+                }
 
                     // if paused, show pause image
                     // show save, load and continue options

@@ -1,6 +1,7 @@
 package video.game;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.image.BufferStrategy;
 import java.util.ArrayList;
@@ -249,11 +250,18 @@ public class Game implements Runnable {
                     g.drawString("PRESS 'L' TO LOAD",
                             (width / 2) - 45, (height / 2) + 200);
                 }
-                g.drawString("Lives: " + lives, 20, this.getHeight() - 20);
+                
+                //set font styles
+                Font font1 = new Font("SansSerif", Font.BOLD, 20);
+                g.setFont(font1);
+                //display lives
+                g.drawString("LIVES: " + lives, 20, this.getHeight() - 20);
             } else {
+                //Show image of game over
                 if (lives == 0) {
                     g.drawImage(Assets.fail, 0, 0, width, height, null);
                 } else {
+                    //show image of "you win"
                     g.drawImage(Assets.win, 0, 0, width, height, null);
                 }
             }
@@ -276,9 +284,9 @@ public class Game implements Runnable {
         player = new Player(getWidth() / 2 - 50, getHeight() - 100, 
                 100, 100, this);
         //regenerate ghosts
-        for(int i = 0; i < 7; i++) {
+        for(int i = 0; i < 12; i++) {
             for(int j = 0; j < 5; j++) {
-                ghosts.add(new Ghosts(10+i*(75+5), 10+j*75, 75, 75, this, 5));
+                ghosts.add(new Ghosts(10+i*(50+10), 10+j*50, 50, 50, this, 2));
             }
         }
         bullets = new ArrayList<Bullet>();

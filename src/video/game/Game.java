@@ -7,7 +7,8 @@ import java.util.ArrayList;
 
 /**
  *
- * @author diana.barrios NissimBetesh
+ * @author diana.barrios 
+ * @author NissimBetesh
  */
 public class Game implements Runnable {
 
@@ -29,7 +30,10 @@ public class Game implements Runnable {
     private int lives;                      // number of lives for the player
     private int score;                      // player score
     private int moveDist;                   // ghosts horizontal distance
-
+    private SoundClip pacmanLoosesLive;     //to use sound of loosing lives
+    private SoundClip pacmanKillsGhost;     //to use sound of ghost killed
+    private SoundClip pacmanRestart;     //to use sound of restart game
+    private SoundClip pacmanShoots;     //to use sound of pacman shooting
 
     /**
      * to create title, width and height and set the game
@@ -50,6 +54,10 @@ public class Game implements Runnable {
         score = 0;
         // distance -> this.width() - (7*ghostWidth + 6*spacing + 2*margin)
         moveDist = width - (12*50 + 11*10 + 2*10);
+        pacmanLoosesLive = new SoundClip("/sounds/pacman_looseslives.wav");
+        pacmanKillsGhost = new SoundClip("/sounds/pacman_killsghost.wav");
+        pacmanRestart = new SoundClip("/sounds/pacman_restart.wav");
+        pacmanShoots = new SoundClip("/sounds/pacman_shoots.wav");
     }
 
     /**
@@ -124,18 +132,23 @@ public class Game implements Runnable {
      */
     private void tick() {
         keyManager.tick();
-            // save and load file, only when paused
+            
+        // save and load file, only when paused
         if(keyManager.save && keyManager.pause) {
             Files.saveFile(this);
         }
         if(keyManager.load && keyManager.pause) {
             Files.loadFile(this);
         }
+        
         player.tick();
+        
         //create bullet 20px wide, 20px high
         if(keyManager.space) {
             bullets.add(new Bullet(player.getX()+player.getWidth()/2-10, 
                     player.getY()-10, 10, 10, this, -3));
+            //play player shoots sound
+            pacmanShoots.play();
         }
         for(Ghosts ghost : ghosts) {
             ghost.tick();
@@ -151,6 +164,8 @@ public class Game implements Runnable {
             for(int j = 0; j < ghosts.size(); j++) {
                 Ghosts ghost = (Ghosts) ghosts.get(j);
                 if(bullet.intersects(ghost)) {
+                    //play pacman kills ghost sound
+                    pacmanKillsGhost.play();
                     score += 10;
                     ghosts.remove(j);
                     bullets.remove(i);
@@ -164,21 +179,25 @@ public class Game implements Runnable {
                 }
             }
         }
+        
         for(int i = 0; i < enemyShot.size(); i++) {
             Bullet bullet = (Bullet) enemyShot.get(i);
             bullet.tick();
             if (bullet.intersects(player)) {
+                //play pacman looses live sound
+                pacmanLoosesLive.play();
                 --lives;
                 enemyShot.remove(i);
                 --i;
             }
+            
             if(bullet.getY() > this.getHeight()) {
                 enemyShot.remove(i);
                 --i;
             }
         }
         
-            // game over on no lives or no bricks
+        // game over on no lives or no bricks
         if (ghosts.isEmpty() || lives == 0) {
             gameOver = true;
         }        

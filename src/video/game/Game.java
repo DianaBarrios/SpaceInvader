@@ -277,6 +277,8 @@ public class Game implements Runnable {
                 // if paused, show pause image
                 // show save, load and continue options
                 if (this.getKeyManager().pause) {
+                    Font font = new Font("SansSerif", Font.BOLD, 12);
+                    g.setFont(font);
                     g.setColor(Color.white);
                     g.drawImage(Assets.pauseImage, (width / 2) - 300, 
                             (height / 2) - 130, 600, 300, null);

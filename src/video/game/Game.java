@@ -1,13 +1,15 @@
 package video.game;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.image.BufferStrategy;
 import java.util.ArrayList;
 
 /**
  *
- * @author diana.barrios NissimBetesh
+ * @author diana.barrios 
+ * @author NissimBetesh
  */
 public class Game implements Runnable {
 
@@ -33,6 +35,12 @@ public class Game implements Runnable {
     private int ghostRow;
 
 
+    private SoundClip pacmanLoosesLive;     //to use sound of loosing lives
+    private SoundClip pacmanKillsGhost;     //to use sound of ghost killed
+    private SoundClip pacmanRestart;     //to use sound of restart game
+    private SoundClip pacmanShoots;     //to use sound of pacman shooting
+
+
     /**
      * to create title, width and height and set the game
      *
@@ -51,6 +59,10 @@ public class Game implements Runnable {
         score = 0;
         // distance -> this.width() - (7*ghostWidth + 6*spacing + 2*margin)
         moveDist = width - (12*50 + 11*10 + 2*10);
+        pacmanLoosesLive = new SoundClip("/sounds/pacman_looseslives.wav");
+        pacmanKillsGhost = new SoundClip("/sounds/pacman_killsghost.wav");
+        pacmanRestart = new SoundClip("/sounds/pacman_restart.wav");
+        pacmanShoots = new SoundClip("/sounds/pacman_shoots.wav");
     }
 
     /**
@@ -131,18 +143,23 @@ public class Game implements Runnable {
      */
     private void tick() {
         keyManager.tick();
-            // save and load file, only when paused
+            
+        // save and load file, only when paused
         if(keyManager.save && keyManager.pause) {
             Files.saveFile(this);
         }
         if(keyManager.load && keyManager.pause) {
             Files.loadFile(this);
         }
+        
         player.tick();
+        
         //create bullet 20px wide, 20px high
         if(keyManager.space) {
             bullets.add(new Bullet(player.getX()+player.getWidth()/2-10, 
                     player.getY()-10, 10, 10, this, -3));
+            //play player shoots sound
+            pacmanShoots.play();
         }
         for(int i = 0; i < ghostCol; i++) {
             for(int j = 0; j < ghostRow; j++) {
@@ -191,6 +208,8 @@ public class Game implements Runnable {
             for(int j = 0; j < ghosts.size(); j++) {
                 Ghosts ghost = (Ghosts) ghosts.get(j);
                 if(bullet.intersects(ghost)) {
+                    //play pacman kills ghost sound
+                    pacmanKillsGhost.play();
                     score += 10;
                     ghosts.remove(j);
                     bullets.remove(i);
@@ -205,14 +224,18 @@ public class Game implements Runnable {
             }
             */
         }
+        
         for(int i = 0; i < enemyShot.size(); i++) {
             Bullet bullet = (Bullet) enemyShot.get(i);
             bullet.tick();
             if (bullet.intersects(player)) {
+                //play pacman looses live sound
+                pacmanLoosesLive.play();
                 --lives;
                 enemyShot.remove(i);
                 --i;
             }
+            
             if(bullet.getY() > this.getHeight()) {
                 enemyShot.remove(i);
                 --i;
@@ -271,6 +294,7 @@ public class Game implements Runnable {
                     // if paused, show pause image
                     // show save, load and continue options
                 if (this.getKeyManager().pause) {
+                    g.setColor(Color.white);
                     g.drawImage(Assets.pauseImage, (width / 2) - 150, 
                             (height / 2) - 150, 300, 300, null);
                     g.drawString("PRESS 'P' TO CONTINUE",
@@ -280,11 +304,20 @@ public class Game implements Runnable {
                     g.drawString("PRESS 'L' TO LOAD",
                             (width / 2) - 45, (height / 2) + 200);
                 }
-                g.drawString("Lives: " + lives, 20, this.getHeight() - 20);
+                //set font styles
+                Font font1 = new Font("SansSerif", Font.BOLD, 20);
+                g.setFont(font1);
+                g.setColor(Color.white);
+                //display lives and score
+                g.drawString("LIVES: " + lives, 20, this.getHeight() - 20);
+                g.drawString("SCORE: " + score, this.getWidth() - 130,
+                        this.getHeight() - 20);
             } else {
+                //Show image of game over
                 if (lives == 0) {
                     g.drawImage(Assets.fail, 0, 0, width, height, null);
                 } else {
+                    //show image of "you win"
                     g.drawImage(Assets.win, 0, 0, width, height, null);
                 }
             }
@@ -306,9 +339,9 @@ public class Game implements Runnable {
         player = new Player(getWidth() / 2 - 50, getHeight() - 100, 
                 100, 100, this);
         //regenerate ghosts
-        for(int i = 0; i < 7; i++) {
+        for(int i = 0; i < 12; i++) {
             for(int j = 0; j < 5; j++) {
-                ghosts.add(new Ghosts(10+i*(75+5), 10+j*75, 75, 75, this, 5));
+                ghosts.add(new Ghosts(10+i*(50+10), 10+j*50, 50, 50, this, 2));
             }
         }
         bullets = new ArrayList<Bullet>();

@@ -5,6 +5,7 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.image.BufferStrategy;
 import java.util.ArrayList;
+import java.awt.Rectangle;
 
 /**
  *
@@ -25,6 +26,7 @@ public class Game implements Runnable {
     private ArrayList<Bullet> bullets;      // to store the shots fired by the player
     private ArrayList<Bullet> enemyShot;    // enemy shots taken
     private ArrayList<Ghosts> ghosts;       // to store ghosts
+    private ArrayList<Protectors> protectors; //to store protectors
     private GhostCont ghostsCont;           // matrix storing ghosts
     private KeyManager keyManager;          // to manage the keyboard
     private boolean gameOver;               // to end the game
@@ -88,6 +90,12 @@ public class Game implements Runnable {
         bullets = new ArrayList<Bullet>();
         enemyShot = new ArrayList<Bullet>();
         display.getJframe().addKeyListener(keyManager);
+        
+        //create protectors
+        protectors = new ArrayList<Protectors>();
+        for (int i = 0; i < 4; i++){
+            protectors.add(new Protectors(i*getWidth()/4 + 70, getHeight() - 200, 200, 20, this));
+        }
     }
 
     @Override
@@ -196,10 +204,21 @@ public class Game implements Runnable {
                     }
                 }
             }
+            
+            //if player bullet intersects a proctector
+            for(int j = 0; j < protectors.size(); j++) {
+                Protectors protector = (Protectors) protectors.get(j);
+                if(bullet.intersects(protector)) {
+                    //remove bullet
+                    bullets.remove(i);
+                }
+            }
+            
             if(bullet.getY() <= 0) {
                 bullets.remove(i);
                 --i;
             }
+            
             /*
             for(int j = 0; j < ghosts.size(); j++) {
                 Ghosts ghost = (Ghosts) ghosts.get(j);
@@ -230,6 +249,16 @@ public class Game implements Runnable {
                 --lives;
                 enemyShot.remove(i);
                 --i;
+            }
+            
+            //if enemy bullet intersects a proctector
+            for(int j = 0; j < protectors.size(); j++) {
+                Protectors protector = (Protectors) protectors.get(j);
+                if(bullet.intersects(protector)) {
+                    //reduce width of the protectors
+                    protector.setWidth(protector.getWidth() - 20);
+                    enemyShot.remove(i);
+                }
             }
             
             if(bullet.getY() > this.getHeight()) {
@@ -273,10 +302,11 @@ public class Game implements Runnable {
                     g.setColor(Color.red);
                     bullet.render(g);
                 }
-                /*
-                for(Ghosts ghost : ghosts) {
-                    ghost.render(g);
-                }*/
+                
+                for(Protectors protectors : protectors) {
+                    protectors.render(g);
+                }
+                
                 for(int i = 0; i < ghostCol; i++) {
                     for(int j = 0; j < ghostRow; j++) {
                         if(ghostsCont.getGhost(i, j) != null) {
@@ -345,6 +375,10 @@ public class Game implements Runnable {
         ghostsCont = new GhostCont(this); //regenerate ghosts
         bullets = new ArrayList<Bullet>(); //new bullets array
         enemyShot = new ArrayList<Bullet>(); //new enemy shots array
+        protectors = new ArrayList<Protectors>();
+        for (int i = 0; i < 4; i++){
+            protectors.add(new Protectors(i*getWidth()/4 + 70, getHeight() - 200, 200, 20, this));
+        }
     }
 
     /**

@@ -19,16 +19,18 @@ public class Game implements Runnable {
     private int height;                     // height of the window
     private Thread thread;                  // thread to create the game
     private boolean running;                // to set the game
-    private boolean started;                // to start the game
     private Player player;                  // to use a player
     private ArrayList<Bullet> bullets;      // to store the shots fired by the player
     private ArrayList<Bullet> enemyShot;    // enemy shots taken
     private ArrayList<Ghosts> ghosts;       // to store ghosts
+    private GhostCont ghostsCont;           // matrix storing ghosts
     private KeyManager keyManager;          // to manage the keyboard
     private boolean gameOver;               // to end the game
     private int lives;                      // number of lives for the player
     private int score;                      // player score
     private int moveDist;                   // ghosts horizontal distance
+    private int ghostCol;
+    private int ghostRow;
 
 
     /**
@@ -43,7 +45,6 @@ public class Game implements Runnable {
         this.width = width;
         this.height = height;
         running = false;
-        started = false;
         keyManager = new KeyManager();
         gameOver = false;
         lives = 3;
@@ -62,11 +63,17 @@ public class Game implements Runnable {
         player = new Player(getWidth() / 2 - 50, getHeight() - 100, 100, 100, this);
         ghosts = new ArrayList<Ghosts>();
         //create ghosts
+        /*
         for(int i = 0; i < 12; i++) {
             for(int j = 0; j < 5; j++) {
                 ghosts.add(new Ghosts(10+i*(50+10), 10+j*50, 50, 50, this, 2));
             }
         }
+        */
+        ghostsCont = new GhostCont(this);
+        ghostCol = 12;
+        ghostRow = 5;
+        
         //create bullets
         bullets = new ArrayList<Bullet>();
         enemyShot = new ArrayList<Bullet>();
@@ -137,6 +144,19 @@ public class Game implements Runnable {
             bullets.add(new Bullet(player.getX()+player.getWidth()/2-10, 
                     player.getY()-10, 10, 10, this, -3));
         }
+        for(int i = 0; i < ghostCol; i++) {
+            for(int j = 0; j < ghostRow; j++) {
+                Ghosts ghost = ghostsCont.getGhost(i, j);
+                if(ghost != null) {
+                    ghost.tick();
+                    if(ghostsCont.ghostAct(i, j) && ghost.isAction()) {
+                        enemyShot.add(new Bullet(ghost.getX()+ghost.getWidth()/2-10, 
+                        ghost.getY()+ghost.getHeight(),10,10,this,3));
+                    }
+                }
+            }
+        }
+        /*
         for(Ghosts ghost : ghosts) {
             ghost.tick();
             if (ghost.isAction()) {
@@ -144,10 +164,30 @@ public class Game implements Runnable {
                         ghost.getY()+ghost.getHeight(),10,10,this,3));
             }
         }
+        */
         //move bullets
         for(int i = 0; i < bullets.size(); i++) {
             Bullet bullet = (Bullet) bullets.get(i);
             bullet.tick();
+            for(int j = 0; j < ghostCol; j++) {
+                for(int k = 0; k < ghostRow; k++) {
+                    Ghosts ghost = ghostsCont.getGhost(j, k);
+                    if(bullet.intersects(ghost)) {
+                        score += 10;
+                        ghostsCont.ghostDeath(j, k);
+                        bullets.remove(i);
+                        --i;
+                        break;
+                    }
+                    
+                }
+                
+            }
+            if(bullet.getY() <= 0) {
+                bullets.remove(i);
+                --i;
+            }
+            /*
             for(int j = 0; j < ghosts.size(); j++) {
                 Ghosts ghost = (Ghosts) ghosts.get(j);
                 if(bullet.intersects(ghost)) {
@@ -163,6 +203,7 @@ public class Game implements Runnable {
                     --j;
                 }
             }
+            */
         }
         for(int i = 0; i < enemyShot.size(); i++) {
             Bullet bullet = (Bullet) enemyShot.get(i);
@@ -179,7 +220,7 @@ public class Game implements Runnable {
         }
         
             // game over on no lives or no bricks
-        if (ghosts.isEmpty() || lives == 0) {
+        if (ghostsCont.getCant() <= 0 || lives <= 0) {
             gameOver = true;
         }        
 
@@ -210,13 +251,22 @@ public class Game implements Runnable {
                     g.setColor(Color.white);
                     bullet.render(g);
                 }
-                for(Ghosts ghost : ghosts) {
-                    ghost.render(g);
-                }
                 for(Bullet bullet : enemyShot) {
                     g.setColor(Color.red);
                     bullet.render(g);
                 }
+                /*
+                for(Ghosts ghost : ghosts) {
+                    ghost.render(g);
+                }*/
+                for(int i = 0; i < ghostCol; i++) {
+                    for(int j = 0; j < ghostRow; j++) {
+                        if(ghostsCont.getGhost(i, j) != null) {
+                            ghostsCont.getGhost(i, j).render(g);
+                        }
+                    }
+                }
+                
 
                     // if paused, show pause image
                     // show save, load and continue options
@@ -252,7 +302,6 @@ public class Game implements Runnable {
      */
     private void restart() {
         lives = 3;
-        started = false;
         gameOver = false;
         player = new Player(getWidth() / 2 - 50, getHeight() - 100, 
                 100, 100, this);
@@ -263,6 +312,7 @@ public class Game implements Runnable {
             }
         }
         bullets = new ArrayList<Bullet>();
+        enemyShot = new ArrayList<Bullet>();
     }
 
     /**
@@ -283,14 +333,6 @@ public class Game implements Runnable {
     }
 
     /**
-     * To know if the game has started
-     * @return an <code>boolean</code> value with started or not
-     */
-    public boolean isStarted() {
-        return started;
-    }
-
-    /**
      * get access to player
      * @return <code>player</code> object for the player
      */
@@ -304,14 +346,6 @@ public class Game implements Runnable {
      */
     public KeyManager getKeyManager() {
         return keyManager;
-    }
-
-    /**
-     * set whether game has just started
-     * @param b <code>boolean</code> value to set
-     */
-    private void setStarted(boolean b) {
-        this.started = b;
     }
 
     /**

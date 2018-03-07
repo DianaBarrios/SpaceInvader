@@ -1,6 +1,5 @@
 package video.game;
 
-import java.awt.Color;
 import java.awt.Graphics;
 
 /**
@@ -33,7 +32,6 @@ class Bullet extends Item {
     @Override
     public void render(Graphics g) {
         //display bullet
-        //g.setColor(Color.white);
         g.fillOval(getX(), getY(), getWidth(), getHeight());
     }
 }

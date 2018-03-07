@@ -24,7 +24,6 @@ public class Game implements Runnable {
     private Player player;                  // to use a player
     private ArrayList<Bullet> bullets;      // to store the shots fired by the player
     private ArrayList<Bullet> enemyShot;    // enemy shots taken
-    private ArrayList<Ghosts> ghosts;       // to store ghosts
     private GhostCont ghostsCont;           // matrix storing ghosts
     private KeyManager keyManager;          // to manage the keyboard
     private boolean gameOver;               // to end the game
@@ -73,18 +72,11 @@ public class Game implements Runnable {
         Assets.init();
             // generar player
         player = new Player(getWidth() / 2 - 50, getHeight() - 100, 100, 100, this);
-        ghosts = new ArrayList<Ghosts>();
-        //create ghosts
-        /*
-        for(int i = 0; i < 12; i++) {
-            for(int j = 0; j < 5; j++) {
-                ghosts.add(new Ghosts(10+i*(50+10), 10+j*50, 50, 50, this, 2));
-            }
-        }
-        */
+        
         ghostsCont = new GhostCont(this);
         ghostCol = 12;
         ghostRow = 5;
+        score = 0;
         
         //create bullets
         bullets = new ArrayList<Bullet>();
@@ -301,11 +293,7 @@ public class Game implements Runnable {
         player = new Player(getWidth() / 2 - 50, getHeight() - 100, 
                 100, 100, this);
         //regenerate ghosts
-        for(int i = 0; i < 12; i++) {
-            for(int j = 0; j < 5; j++) {
-                ghosts.add(new Ghosts(10+i*(50+10), 10+j*50, 50, 50, this, 2));
-            }
-        }
+        ghostsCont = new GhostCont(this);
         bullets = new ArrayList<Bullet>();
         enemyShot = new ArrayList<Bullet>();
     }
@@ -350,6 +338,36 @@ public class Game implements Runnable {
     public KeyManager getKeyManager() {
         return keyManager;
     }
+
+    public ArrayList<Bullet> getBullets() {
+        return bullets;
+    }
+
+    public ArrayList<Bullet> getEnemyShot() {
+        return enemyShot;
+    }
+
+    public GhostCont getGhostsCont() {
+        return ghostsCont;
+    }
+
+    public int getLives() {
+        return lives;
+    }
+
+    public int getScore() {
+        return score;
+    }
+
+    public void setLives(int lives) {
+        this.lives = lives;
+    }
+
+    public void setScore(int score) {
+        this.score = score;
+    }
+    
+    
 
     /**
      * start the thread for the game

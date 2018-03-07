@@ -60,6 +60,7 @@ public class Ghosts extends Item{
         }
         timer = new Timer((int) (Math.random()*7 + 3));
     }
+    
 
     public int getSpeedX() {
         return speedX;
@@ -71,6 +72,14 @@ public class Ghosts extends Item{
     
     public boolean isAction() {
         return action;
+    }
+    
+    public int getMoved() {
+        return moved;
+    }
+    
+    public void setMoved(int moved) {
+        this.moved = moved;
     }
     
     @Override

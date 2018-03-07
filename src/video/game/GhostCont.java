@@ -29,12 +29,24 @@ public class GhostCont {
         cant = 60;
     }
     
+    public GhostCont(GhostCont ghostCont) {
+        this.ghosts = ghostCont.getGhosts();
+    }
+    
     public int getCant() {
         return cant;
     }
     
+    public void setCant(int cant) {
+        this.cant = cant;
+    }
+    
     public Ghosts getGhost(int i, int j) {
         return ghosts.get(i).get(j);
+    }
+    
+    public void setGhost(int i, int j, Ghosts ghost) {
+        ghosts.get(i).set(j, ghost);
     }
     
     /**
@@ -59,4 +71,8 @@ public class GhostCont {
         }
         return true;
      }
+    
+    public ArrayList getGhosts() {
+        return ghosts;
+    }
 }

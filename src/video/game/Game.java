@@ -124,7 +124,6 @@ public class Game implements Runnable {
                     if(keyManager.load) {
                         Files.loadFile(this);
                     }
-                    
                 }
                 render();
                 delta--;
@@ -180,6 +179,7 @@ public class Game implements Runnable {
             }
         }
         */
+        
         //move bullets
         for(int i = 0; i < bullets.size(); i++) {
             Bullet bullet = (Bullet) bullets.get(i);
@@ -194,9 +194,7 @@ public class Game implements Runnable {
                         --i;
                         break;
                     }
-                    
                 }
-                
             }
             if(bullet.getY() <= 0) {
                 bullets.remove(i);
@@ -243,8 +241,7 @@ public class Game implements Runnable {
             // game over on no lives or no bricks
         if (ghostsCont.getCant() <= 0 || lives <= 0) {
             gameOver = true;
-        }        
-
+        }    
     }
     
     /**
@@ -266,7 +263,7 @@ public class Game implements Runnable {
             g.drawImage(Assets.background, 0, 0, width, height, null);
                 // if game over, show end game images
             if (!gameOver) {
-                    // paint player, ball, bricks and any booster
+                // paint player, ball, bricks and any booster
                 player.render(g);
                 for(Bullet bullet : bullets) {
                     g.setColor(Color.white);
@@ -288,9 +285,8 @@ public class Game implements Runnable {
                     }
                 }
                 
-
-                    // if paused, show pause image
-                    // show save, load and continue options
+                // if paused, show pause image
+                // show save, load and continue options
                 if (this.getKeyManager().pause) {
                     g.setColor(Color.white);
                     g.drawImage(Assets.pauseImage, (width / 2) - 300, 
@@ -344,15 +340,13 @@ public class Game implements Runnable {
             }
         }
         */
-        //regenerate ghosts
-        ghostsCont = new GhostCont(this);
-       
-        bullets = new ArrayList<Bullet>();
-        enemyShot = new ArrayList<Bullet>();
+        
+        ghostsCont = new GhostCont(this); //regenerate ghosts
+        bullets = new ArrayList<Bullet>(); //new bullets array
+        enemyShot = new ArrayList<Bullet>(); //new enemy shots array
     }
 
     /**
-
      * To get the width of the game window
      * @return an <code>int</code> value with the width
      */

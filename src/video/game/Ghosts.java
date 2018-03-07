@@ -110,7 +110,7 @@ public class Ghosts extends Item{
             // if distance to be moved is max, move the enemies one step and invert speed
         if(Math.abs(moved) >= game.getMoveDist()) {
             moved = 0;
-            setY(getY() + 5);
+            setY(getY() + 17);
             speedX = -speedX;
         }
         

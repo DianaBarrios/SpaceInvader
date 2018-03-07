@@ -1,7 +1,8 @@
 package video.game;
 
 /**
- * @author diana.barrios NissimBetesh
+ * @author diana.barrios 
+ * @author NissimBetesh
  */
 public class VideoGame {    
     /**

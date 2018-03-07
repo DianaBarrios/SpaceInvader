@@ -8,8 +8,9 @@ package video.game;
 import java.util.ArrayList;
 
 /**
- *
+ * 
  * @author Nissim
+ * @author Diana
  */
 public class GhostCont {
     private ArrayList<ArrayList<Ghosts> > ghosts;
@@ -19,7 +20,6 @@ public class GhostCont {
     public GhostCont(Game game) {
         ghosts = new ArrayList<ArrayList<Ghosts> >();
         
-        
         for(int i = 0; i < 12; i++) {
             ghosts.add(new ArrayList<Ghosts>());
             for(int j = 0; j < 5; j++) {
@@ -27,10 +27,6 @@ public class GhostCont {
             }
         }
         cant = 60;
-    }
-    
-    public GhostCont(GhostCont ghostCont) {
-        this.ghosts = ghostCont.getGhosts();
     }
     
     public int getCant() {
@@ -64,7 +60,6 @@ public class GhostCont {
         
         while(x > j) {
             if(ghosts.get(i).get(x) != null) {
-                
                 return false;
             }
             x--;

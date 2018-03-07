@@ -5,6 +5,7 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.image.BufferStrategy;
 import java.util.ArrayList;
+import java.awt.Rectangle;
 
 /**
  *
@@ -24,16 +25,16 @@ public class Game implements Runnable {
     private Player player;                  // to use a player
     private ArrayList<Bullet> bullets;      // to store the shots fired by the player
     private ArrayList<Bullet> enemyShot;    // enemy shots taken
+
+    private ArrayList<Protectors> protectors; //to store protectors
     private GhostCont ghostsCont;           // matrix storing ghosts
     private KeyManager keyManager;          // to manage the keyboard
     private boolean gameOver;               // to end the game
     private int lives;                      // number of lives for the player
     private int score;                      // player score
     private int moveDist;                   // ghosts horizontal distance
-    private int ghostCol;
-    private int ghostRow;
-
-
+    private int ghostCol;                   // col of the ghost array
+    private int ghostRow;                   //  row of the ghost array
     private SoundClip pacmanLoosesLive;     //to use sound of loosing lives
     private SoundClip pacmanKillsGhost;     //to use sound of ghost killed
     private SoundClip pacmanRestart;     //to use sound of restart game
@@ -70,7 +71,7 @@ public class Game implements Runnable {
     private void init() {
         display = new Display(title, getWidth(), getHeight());
         Assets.init();
-            // generar player
+        // generate player and ghosts
         player = new Player(getWidth() / 2 - 50, getHeight() - 100, 100, 100, this);
         
         ghostsCont = new GhostCont(this);
@@ -82,6 +83,12 @@ public class Game implements Runnable {
         bullets = new ArrayList<Bullet>();
         enemyShot = new ArrayList<Bullet>();
         display.getJframe().addKeyListener(keyManager);
+        
+        //create protectors
+        protectors = new ArrayList<Protectors>();
+        for (int i = 0; i < 4; i++){
+            protectors.add(new Protectors(i*getWidth()/4 + 70, getHeight() - 200, 200, 20, this));
+        }
     }
 
     @Override
@@ -118,7 +125,6 @@ public class Game implements Runnable {
                     if(keyManager.load) {
                         Files.loadFile(this);
                     }
-                    
                 }
                 render();
                 delta--;
@@ -159,6 +165,7 @@ public class Game implements Runnable {
                 }
             }
         }
+
         //move bullets
         for(int i = 0; i < bullets.size(); i++) {
             Bullet bullet = (Bullet) bullets.get(i);
@@ -173,14 +180,23 @@ public class Game implements Runnable {
                         --i;
                         break;
                     }
-                    
                 }
-                
             }
+            
+            //if player bullet intersects a proctector
+            for(int j = 0; j < protectors.size(); j++) {
+                Protectors protector = (Protectors) protectors.get(j);
+                if(bullet.intersects(protector)) {
+                    //remove bullet
+                    bullets.remove(i);
+                }
+            }
+            
             if(bullet.getY() <= 0) {
                 bullets.remove(i);
                 --i;
             }
+
         }
         
         for(int i = 0; i < enemyShot.size(); i++) {
@@ -194,6 +210,16 @@ public class Game implements Runnable {
                 --i;
             }
             
+            //if enemy bullet intersects a proctector
+            for(int j = 0; j < protectors.size(); j++) {
+                Protectors protector = (Protectors) protectors.get(j);
+                if(bullet.intersects(protector)) {
+                    //reduce width of the protectors
+                    protector.setWidth(protector.getWidth() - 20);
+                    enemyShot.remove(i);
+                }
+            }
+            
             if(bullet.getY() > this.getHeight()) {
                 enemyShot.remove(i);
                 --i;
@@ -203,8 +229,7 @@ public class Game implements Runnable {
             // game over on no lives or no bricks
         if (ghostsCont.getCant() <= 0 || lives <= 0) {
             gameOver = true;
-        }        
-
+        }    
     }
     
     /**
@@ -226,7 +251,7 @@ public class Game implements Runnable {
             g.drawImage(Assets.background, 0, 0, width, height, null);
                 // if game over, show end game images
             if (!gameOver) {
-                    // paint player, ball, bricks and any booster
+                // paint player, ball, bricks and any booster
                 player.render(g);
                 for(Bullet bullet : bullets) {
                     g.setColor(Color.white);
@@ -236,7 +261,12 @@ public class Game implements Runnable {
                     g.setColor(Color.red);
                     bullet.render(g);
                 }
-                for(int i = 0; i < ghostCol; i++) {
+                
+                for(Protectors protectors : protectors) {
+                    protectors.render(g);
+                }
+                
+             for(int i = 0; i < ghostCol; i++) {
                     for(int j = 0; j < ghostRow; j++) {
                         if(ghostsCont.getGhost(i, j) != null) {
                             ghostsCont.getGhost(i, j).render(g);
@@ -244,13 +274,12 @@ public class Game implements Runnable {
                     }
                 }
                 
-
-                    // if paused, show pause image
-                    // show save, load and continue options
+                // if paused, show pause image
+                // show save, load and continue options
                 if (this.getKeyManager().pause) {
                     g.setColor(Color.white);
-                    g.drawImage(Assets.pauseImage, (width / 2) - 150, 
-                            (height / 2) - 150, 300, 300, null);
+                    g.drawImage(Assets.pauseImage, (width / 2) - 300, 
+                            (height / 2) - 130, 600, 300, null);
                     g.drawString("PRESS 'P' TO CONTINUE",
                             (width / 2) - 60, (height / 2) + 160);
                     g.drawString("PRESS 'S' TO SAVE",
@@ -289,13 +318,17 @@ public class Game implements Runnable {
      */
     private void restart() {
         lives = 3;
+        score = 0;
         gameOver = false;
         player = new Player(getWidth() / 2 - 50, getHeight() - 100, 
                 100, 100, this);
-        //regenerate ghosts
         ghostsCont = new GhostCont(this);
         bullets = new ArrayList<Bullet>();
-        enemyShot = new ArrayList<Bullet>();
+        enemyShot = new ArrayList<Bullet>()
+        protectors = new ArrayList<Protectors>();
+        for (int i = 0; i < 4; i++){
+            protectors.add(new Protectors(i*getWidth()/4 + 70, getHeight() - 200, 200, 20, this));
+        }
     }
     
     public void shoot() {
@@ -307,7 +340,6 @@ public class Game implements Runnable {
     }
 
     /**
-
      * To get the width of the game window
      * @return an <code>int</code> value with the width
      */
@@ -375,7 +407,6 @@ public class Game implements Runnable {
     public synchronized void start() {
         if (!running) {
             running = true;
-            //pauseGame = false;
             thread = new Thread(this);
             thread.start();
         }

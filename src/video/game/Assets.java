@@ -3,9 +3,10 @@ package video.game;
 import java.awt.image.BufferedImage;
 
 /**
- *
- * @author diana.barrios NissimBetesh
+ * @author diana.barrios 
+ * @author NissimBetesh
  */
+
 public class Assets {
     public static BufferedImage background;             //to store background image
     public static BufferedImage sprites;                //to store the sprites
@@ -28,9 +29,9 @@ public class Assets {
     
     public static void init(){
         background = ImageLoader.loadImage("/images/backgorund.jpg");
-        pauseImage = ImageLoader.loadImage("/images/pause1.png");
-        win = ImageLoader.loadImage("/images/youwin.png");
-        fail = ImageLoader.loadImage("/images/gameover.jpg");
+        pauseImage = ImageLoader.loadImage("/images/gamePaused.png");
+        win = ImageLoader.loadImage("/images/win.png");
+        fail = ImageLoader.loadImage("/images/gameOver.png");
         sprites = ImageLoader.loadImage("/images/pacmam.png");
         
         //Creating array of images before animations

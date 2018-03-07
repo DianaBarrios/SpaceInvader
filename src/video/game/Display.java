@@ -6,8 +6,10 @@ import javax.swing.JFrame;
 
 /**
  *
- * @author diana.barrios NissimBetesh
+ * @author diana.barrios 
+ * @author NissimBetesh
  */
+
 public class Display {
     private JFrame jframe;          // this is the app class
     private Canvas canvas;          // to display images

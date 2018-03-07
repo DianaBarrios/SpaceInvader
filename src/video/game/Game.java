@@ -197,9 +197,11 @@ public class Game implements Runnable {
                 }
             }
             
+                //if a bullet intersects a ufo
             if(bullet.intersects(ufo)) {
                 ufo.die();
                 score += ufo.getScore();
+                bullets.remove(i);
             }
                 // erase bullet if it leaves bounds
             if(bullet.getY() <= 0) {

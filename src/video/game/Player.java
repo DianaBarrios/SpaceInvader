@@ -1,6 +1,5 @@
 package video.game;
 
-import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Rectangle;
 
@@ -11,12 +10,12 @@ import java.awt.Rectangle;
 public class Player extends Item {
     
     private Game game;
-    private Animation animationRight; //to store the animation for going right
-    private Animation animationLeft; // to store the animation for going left
-    private Animation animationShoot; //to store the animation for going down
+    private Animation animationRight;           // to store the animation for going right
+    private Animation animationLeft;            // to store the animation for going left
+    private Animation animationShoot;           // to store the animation for going down
     
-    private Timer timer; 
-    private boolean action;
+    private Timer timer;                        // timer between actions
+    private boolean action;                     // whether action will be done
     
     /**
      * To build a player object
@@ -32,7 +31,7 @@ public class Player extends Item {
         this.animationRight = new Animation(Assets.playerRight, 100);
         this.animationLeft = new Animation(Assets.playerLeft, 100);
         this.animationShoot = new Animation(Assets.playerShoot, 100);
-        timer = new Timer(1);
+        timer = new Timer(0.3);
         action = false;
     }
     
@@ -44,21 +43,28 @@ public class Player extends Item {
         return new Rectangle(x, y, width, height);
     }
     
+    /**
+     * get whether action will be done
+     * @return <code>boolean</code> value with whether or not to shoot
+     */
     public boolean isAction() {
         return action;
     }
 
     @Override
     public void tick() {
+            // when timer is finished, prepare action
         if(timer.isAction()) {
             action = true;
         }
+            // if action is prepared and space is pressed, shoot
         if(action && game.getKeyManager().space) {
             game.shoot();
+                // new timer to count
             timer = new Timer(1);
             action = false;
         }
-        //moving player depending on flags
+            // moving player animation depending on flags
         this.animationShoot.tick(); 
         
         if (game.getKeyManager().left){
@@ -70,7 +76,7 @@ public class Player extends Item {
             animationRight.tick();
         }
         
-        //reset x position and y position if collision with walls
+            // reset x position and y position if collision with walls
         if (this.getX() + this.getWidth() >= game.getWidth()){
             setX(game.getWidth() - this.getWidth());
             

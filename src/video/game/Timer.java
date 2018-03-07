@@ -1,22 +1,18 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package video.game;
 
 /**
- *
- * @author Nissim
+ * @author diana.barrios
+ * @author NissimBetesh
  */
 public class Timer {
-    private long lastTime;          //to save the previous time of the animation
-    private long timer;             //to acumulate the time of the animation
-    int max;                        //max time to accumulate
-    boolean action;                 //check if action should be done
+    private long lastTime;          // to save the previous time of the animation
+    private long timer;             // to acumulate the time of the animation
+    int max;                        // max time to accumulate
+    boolean action;                 // check if action should be done
     
     /**
-     * starting the timer
+     * starting the timer to delay actions
+     * @param max <code>double</code> value with the time to act
      */
     public Timer(double max){
         timer = 0; 
@@ -26,12 +22,16 @@ public class Timer {
         action = false;
     }
    
+    /**
+     * return if action is to be done
+     * @return <code>boolean</code> value with action to be done
+     */
     public boolean isAction() {
         return action;
     }
     
     /**
-     * To update the animation to get the right index of the frame to paint
+     * add to the timer, when it reaches the max, action is to be done
      */
     public void tick() {
         action = false;

@@ -25,8 +25,7 @@ public class Game implements Runnable {
     private Player player;                  // to use a player
     private ArrayList<Bullet> bullets;      // to store the shots fired by the player
     private ArrayList<Bullet> enemyShot;    // enemy shots taken
-
-    private ArrayList<Protectors> protectors; //to store protectors
+    private ArrayList<Protectors> protectors; // to store protectors
     private GhostCont ghostsCont;           // matrix storing ghosts
     private KeyManager keyManager;          // to manage the keyboard
     private boolean gameOver;               // to end the game
@@ -34,16 +33,15 @@ public class Game implements Runnable {
     private int score;                      // player score
     private int moveDist;                   // ghosts horizontal distance
     private int ghostCol;                   // col of the ghost array
-    private int ghostRow;                   //  row of the ghost array
-    private SoundClip pacmanLoosesLive;     //to use sound of loosing lives
-    private SoundClip pacmanKillsGhost;     //to use sound of ghost killed
-    private SoundClip pacmanRestart;     //to use sound of restart game
-    private SoundClip pacmanShoots;     //to use sound of pacman shooting
+    private int ghostRow;                   // row of the ghost array
+    private SoundClip pacmanLoosesLive;     // to use sound of loosing lives
+    private SoundClip pacmanKillsGhost;     // to use sound of ghost killed
+    private SoundClip pacmanRestart;        // to use sound of restart game
+    private SoundClip pacmanShoots;         // to use sound of pacman shooting
 
 
     /**
      * to create title, width and height and set the game
-     *
      * @param title to set the title of the window
      * @param width to set the width of the window
      * @param height to set the height of the window
@@ -71,7 +69,7 @@ public class Game implements Runnable {
     private void init() {
         display = new Display(title, getWidth(), getHeight());
         Assets.init();
-        // generate player and ghosts
+            // generate player and ghosts
         player = new Player(getWidth() / 2 - 50, getHeight() - 100, 100, 100, this);
         
         ghostsCont = new GhostCont(this);
@@ -79,12 +77,12 @@ public class Game implements Runnable {
         ghostRow = 5;
         score = 0;
         
-        //create bullets
+            // create bullets
         bullets = new ArrayList<Bullet>();
         enemyShot = new ArrayList<Bullet>();
         display.getJframe().addKeyListener(keyManager);
         
-        //create protectors
+            // create protectors
         protectors = new ArrayList<Protectors>();
         for (int i = 0; i < 4; i++){
             protectors.add(new Protectors(i*getWidth()/4 + 70, getHeight() - 200, 200, 20, this));
@@ -142,7 +140,7 @@ public class Game implements Runnable {
     private void tick() {
         keyManager.tick();
             
-        // save and load file, only when paused
+            // save and load file, only when paused
         if(keyManager.save && keyManager.pause) {
             Files.saveFile(this);
         }
@@ -151,11 +149,11 @@ public class Game implements Runnable {
         }
         
         player.tick();
-        
-        
+            // move ghosts
         for(int i = 0; i < ghostCol; i++) {
             for(int j = 0; j < ghostRow; j++) {
                 Ghosts ghost = ghostsCont.getGhost(i, j);
+                    // if ghost is dead (null), not move
                 if(ghost != null) {
                     ghost.tick();
                     if(ghostsCont.ghostAct(i, j) && ghost.isAction()) {
@@ -166,10 +164,11 @@ public class Game implements Runnable {
             }
         }
 
-        //move bullets
+            // move bullets
         for(int i = 0; i < bullets.size(); i++) {
             Bullet bullet = (Bullet) bullets.get(i);
             bullet.tick();
+                // check collision and move bullets
             for(int j = 0; j < ghostCol; j++) {
                 for(int k = 0; k < ghostRow; k++) {
                     Ghosts ghost = ghostsCont.getGhost(j, k);
@@ -183,15 +182,15 @@ public class Game implements Runnable {
                 }
             }
             
-            //if player bullet intersects a proctector
+                // if player bullet intersects a proctector
             for(int j = 0; j < protectors.size(); j++) {
                 Protectors protector = (Protectors) protectors.get(j);
                 if(bullet.intersects(protector)) {
-                    //remove bullet
+                    // remove bullet
                     bullets.remove(i);
                 }
             }
-            
+                // erase bullet if it leaves bounds
             if(bullet.getY() <= 0) {
                 bullets.remove(i);
                 --i;
@@ -203,23 +202,23 @@ public class Game implements Runnable {
             Bullet bullet = (Bullet) enemyShot.get(i);
             bullet.tick();
             if (bullet.intersects(player)) {
-                //play pacman looses live sound
+                    // play pacman looses live sound
                 pacmanLoosesLive.play();
                 --lives;
                 enemyShot.remove(i);
                 --i;
             }
             
-            //if enemy bullet intersects a proctector
+                // if enemy bullet intersects a proctector
             for(int j = 0; j < protectors.size(); j++) {
                 Protectors protector = (Protectors) protectors.get(j);
                 if(bullet.intersects(protector)) {
-                    //reduce width of the protectors
+                        // reduce width of the protectors
                     protector.setWidth(protector.getWidth() - 20);
                     enemyShot.remove(i);
                 }
             }
-            
+                // remove bullets out of bounds
             if(bullet.getY() > this.getHeight()) {
                 enemyShot.remove(i);
                 --i;
@@ -251,7 +250,7 @@ public class Game implements Runnable {
             g.drawImage(Assets.background, 0, 0, width, height, null);
                 // if game over, show end game images
             if (!gameOver) {
-                // paint player, ball, bricks and any booster
+                    // paint player, enemies, bullets and protectors
                 player.render(g);
                 for(Bullet bullet : bullets) {
                     g.setColor(Color.white);
@@ -274,8 +273,8 @@ public class Game implements Runnable {
                     }
                 }
                 
-                // if paused, show pause image
-                // show save, load and continue options
+                    // if paused, show pause image
+                    // show save, load and continue options
                 if (this.getKeyManager().pause) {
                     g.setColor(Color.white);
                     g.drawImage(Assets.pauseImage, (width / 2) - 300, 
@@ -287,20 +286,20 @@ public class Game implements Runnable {
                     g.drawString("PRESS 'L' TO LOAD",
                             (width / 2) - 45, (height / 2) + 200);
                 }
-                //set font styles
+                    // set font styles
                 Font font1 = new Font("SansSerif", Font.BOLD, 20);
                 g.setFont(font1);
                 g.setColor(Color.white);
-                //display lives and score
+                    // display lives and score
                 g.drawString("LIVES: " + lives, 20, this.getHeight() - 20);
                 g.drawString("SCORE: " + score, this.getWidth() - 130,
                         this.getHeight() - 20);
             } else {
-                //Show image of game over
+                    // Show image of game over
                 if (lives == 0) {
                     g.drawImage(Assets.fail, 0, 0, width, height, null);
                 } else {
-                    //show image of "you win"
+                        // show image of "you win"
                     g.drawImage(Assets.win, 0, 0, width, height, null);
                 }
             }
@@ -309,6 +308,10 @@ public class Game implements Runnable {
         }
     }
 
+    /**
+     * get the distance enemies need to move to change direction
+     * @return <code>int</code> value of the distance
+     */
     public int getMoveDist() {
         return moveDist;
     }
@@ -324,24 +327,27 @@ public class Game implements Runnable {
                 100, 100, this);
         ghostsCont = new GhostCont(this);
         bullets = new ArrayList<Bullet>();
-        enemyShot = new ArrayList<Bullet>()
+        enemyShot = new ArrayList<Bullet>();
         protectors = new ArrayList<Protectors>();
         for (int i = 0; i < 4; i++){
             protectors.add(new Protectors(i*getWidth()/4 + 70, getHeight() - 200, 200, 20, this));
         }
     }
     
+    /**
+     * make the player shoot
+     */
     public void shoot() {
-        //create bullet 20px wide, 20px high
-            bullets.add(new Bullet(player.getX()+player.getWidth()/2-10, 
-                    player.getY()-10, 10, 10, this, -3));
-            //play player shoots sound
-            pacmanShoots.play();
+            // create bullet 20px wide, 20px high
+        bullets.add(new Bullet(player.getX()+player.getWidth()/2-10, 
+                player.getY()-10, 10, 10, this, -3));
+            // play player shoots sound
+        pacmanShoots.play();
     }
 
     /**
      * To get the width of the game window
-     * @return an <code>int</code> value with the width
+     * @return xvan <code>int</code> value with the width
      */
     public int getWidth() {
         return width;
@@ -370,31 +376,59 @@ public class Game implements Runnable {
     public KeyManager getKeyManager() {
         return keyManager;
     }
-
+    
+    /**
+     * get the array with the player bullets
+     * @return <code>ArrayList</code> array with bullets
+     */
     public ArrayList<Bullet> getBullets() {
         return bullets;
     }
 
+    /**
+     * get ArrayList with the enemy bullets
+     * @return <code>ArrayList</code> with the bullets
+     */
     public ArrayList<Bullet> getEnemyShot() {
         return enemyShot;
     }
 
+    /**
+     * get the container of enemies
+     * @return <code>GhostCont</code> container with the enemies
+     */
     public GhostCont getGhostsCont() {
         return ghostsCont;
     }
 
+    /**
+     * get the current lives
+     * @return <code>int</code> value of the lives
+     */
     public int getLives() {
         return lives;
     }
 
+    /**
+     * get the score
+     * @return <code>int</code> value of the current score
+     */
     public int getScore() {
         return score;
     }
 
+    /**
+     * set the lives of the player
+     * @param lives <code>int</code> new number of lives
+     */
     public void setLives(int lives) {
         this.lives = lives;
     }
 
+    /**
+     * set the score of the player
+     * @param score <code>int</code> new score
+     */
     public void setScore(int score) {
         this.score = score;
     }

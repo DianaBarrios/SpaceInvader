@@ -338,12 +338,17 @@ public class Game implements Runnable {
         gameOver = false;
         player = new Player(getWidth() / 2 - 50, getHeight() - 100, 
                 100, 100, this);
-        //regenerate ghosts
+       
+        /*
         for(int i = 0; i < 12; i++) {
             for(int j = 0; j < 5; j++) {
                 ghosts.add(new Ghosts(10+i*(50+10), 10+j*50, 50, 50, this, 2));
             }
         }
+        */
+        //regenerate ghosts
+        ghostsCont = new GhostCont(this);
+       
         bullets = new ArrayList<Bullet>();
         enemyShot = new ArrayList<Bullet>();
     }

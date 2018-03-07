@@ -25,7 +25,7 @@ public class Game implements Runnable {
     private Player player;                  // to use a player
     private ArrayList<Bullet> bullets;      // to store the shots fired by the player
     private ArrayList<Bullet> enemyShot;    // enemy shots taken
-    private ArrayList<Ghosts> ghosts;       // to store ghosts
+
     private ArrayList<Protectors> protectors; //to store protectors
     private GhostCont ghostsCont;           // matrix storing ghosts
     private KeyManager keyManager;          // to manage the keyboard
@@ -73,18 +73,11 @@ public class Game implements Runnable {
         Assets.init();
         // generate player and ghosts
         player = new Player(getWidth() / 2 - 50, getHeight() - 100, 100, 100, this);
-        ghosts = new ArrayList<Ghosts>();
-        //create ghosts
-        /*
-        for(int i = 0; i < 12; i++) {
-            for(int j = 0; j < 5; j++) {
-                ghosts.add(new Ghosts(10+i*(50+10), 10+j*50, 50, 50, this, 2));
-            }
-        }
-        */
+        
         ghostsCont = new GhostCont(this);
         ghostCol = 12;
         ghostRow = 5;
+        score = 0;
         
         //create bullets
         bullets = new ArrayList<Bullet>();
@@ -159,13 +152,7 @@ public class Game implements Runnable {
         
         player.tick();
         
-        //create bullet 20px wide, 20px high
-        if(keyManager.space) {
-            bullets.add(new Bullet(player.getX()+player.getWidth()/2-10, 
-                    player.getY()-10, 10, 10, this, -3));
-            //play player shoots sound
-            pacmanShoots.play();
-        }
+        
         for(int i = 0; i < ghostCol; i++) {
             for(int j = 0; j < ghostRow; j++) {
                 Ghosts ghost = ghostsCont.getGhost(i, j);
@@ -178,16 +165,7 @@ public class Game implements Runnable {
                 }
             }
         }
-        /*
-        for(Ghosts ghost : ghosts) {
-            ghost.tick();
-            if (ghost.isAction()) {
-                enemyShot.add(new Bullet(ghost.getX()+ghost.getWidth()/2-10, 
-                        ghost.getY()+ghost.getHeight(),10,10,this,3));
-            }
-        }
-        */
-        
+
         //move bullets
         for(int i = 0; i < bullets.size(); i++) {
             Bullet bullet = (Bullet) bullets.get(i);
@@ -218,26 +196,7 @@ public class Game implements Runnable {
                 bullets.remove(i);
                 --i;
             }
-            
-            /*
-            for(int j = 0; j < ghosts.size(); j++) {
-                Ghosts ghost = (Ghosts) ghosts.get(j);
-                if(bullet.intersects(ghost)) {
-                    //play pacman kills ghost sound
-                    pacmanKillsGhost.play();
-                    score += 10;
-                    ghosts.remove(j);
-                    bullets.remove(i);
-                    --i;
-                    --j;
-                    break;
-                }
-                if(ghost.getY() <= 0) {
-                    ghosts.remove(j);
-                    --j;
-                }
-            }
-            */
+
         }
         
         for(int i = 0; i < enemyShot.size(); i++) {
@@ -307,7 +266,7 @@ public class Game implements Runnable {
                     protectors.render(g);
                 }
                 
-                for(int i = 0; i < ghostCol; i++) {
+             for(int i = 0; i < ghostCol; i++) {
                     for(int j = 0; j < ghostRow; j++) {
                         if(ghostsCont.getGhost(i, j) != null) {
                             ghostsCont.getGhost(i, j).render(g);
@@ -363,22 +322,21 @@ public class Game implements Runnable {
         gameOver = false;
         player = new Player(getWidth() / 2 - 50, getHeight() - 100, 
                 100, 100, this);
-       
-        /*
-        for(int i = 0; i < 12; i++) {
-            for(int j = 0; j < 5; j++) {
-                ghosts.add(new Ghosts(10+i*(50+10), 10+j*50, 50, 50, this, 2));
-            }
-        }
-        */
-        
-        ghostsCont = new GhostCont(this); //regenerate ghosts
-        bullets = new ArrayList<Bullet>(); //new bullets array
-        enemyShot = new ArrayList<Bullet>(); //new enemy shots array
+        ghostsCont = new GhostCont(this);
+        bullets = new ArrayList<Bullet>();
+        enemyShot = new ArrayList<Bullet>()
         protectors = new ArrayList<Protectors>();
         for (int i = 0; i < 4; i++){
             protectors.add(new Protectors(i*getWidth()/4 + 70, getHeight() - 200, 200, 20, this));
         }
+    }
+    
+    public void shoot() {
+        //create bullet 20px wide, 20px high
+            bullets.add(new Bullet(player.getX()+player.getWidth()/2-10, 
+                    player.getY()-10, 10, 10, this, -3));
+            //play player shoots sound
+            pacmanShoots.play();
     }
 
     /**
@@ -412,6 +370,36 @@ public class Game implements Runnable {
     public KeyManager getKeyManager() {
         return keyManager;
     }
+
+    public ArrayList<Bullet> getBullets() {
+        return bullets;
+    }
+
+    public ArrayList<Bullet> getEnemyShot() {
+        return enemyShot;
+    }
+
+    public GhostCont getGhostsCont() {
+        return ghostsCont;
+    }
+
+    public int getLives() {
+        return lives;
+    }
+
+    public int getScore() {
+        return score;
+    }
+
+    public void setLives(int lives) {
+        this.lives = lives;
+    }
+
+    public void setScore(int score) {
+        this.score = score;
+    }
+    
+    
 
     /**
      * start the thread for the game

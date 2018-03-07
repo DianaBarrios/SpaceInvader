@@ -15,6 +15,9 @@ public class Player extends Item {
     private Animation animationLeft; // to store the animation for going left
     private Animation animationShoot; //to store the animation for going down
     
+    private Timer timer; 
+    private boolean action;
+    
     /**
      * To build a player object
      * @param x an <code>int</code> value to get the x coordinate
@@ -29,6 +32,8 @@ public class Player extends Item {
         this.animationRight = new Animation(Assets.playerRight, 100);
         this.animationLeft = new Animation(Assets.playerLeft, 100);
         this.animationShoot = new Animation(Assets.playerShoot, 100);
+        timer = new Timer(1);
+        action = false;
     }
     
     /**
@@ -38,9 +43,21 @@ public class Player extends Item {
     public Rectangle getRectangle(){
         return new Rectangle(x, y, width, height);
     }
+    
+    public boolean isAction() {
+        return action;
+    }
 
     @Override
     public void tick() {
+        if(timer.isAction()) {
+            action = true;
+        }
+        if(action && game.getKeyManager().space) {
+            game.shoot();
+            timer = new Timer(1);
+            action = false;
+        }
         //moving player depending on flags
         this.animationShoot.tick(); 
         
@@ -60,6 +77,7 @@ public class Player extends Item {
         } else if (getX() <= 0){
             setX(0);
         }
+        timer.tick();
     }
         
     @Override
@@ -71,7 +89,7 @@ public class Player extends Item {
         else if (game.getKeyManager().right) {
             g.drawImage(animationRight.getCurrentFrame(), getX(), getY(), getWidth(), getHeight(), null);
         }
-        else /*(game.getKeyManager().space) */{
+        else {
             g.drawImage(animationShoot.getCurrentFrame(), getX(), getY(), getWidth(), getHeight(), null);
         }
 

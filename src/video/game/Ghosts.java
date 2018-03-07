@@ -55,8 +55,9 @@ public class Ghosts extends Item{
             this.animationOrange = new Animation(Assets.ghostOrange, 100);
             this.animationOrangeReverse = new Animation(Assets.ghostOrangeInverse, 100);
         }
-        timer = new Timer((int) (Math.random()*15 + 5));
+        timer = new Timer((int) (Math.random()*7 + 3));
     }
+    
 
     public int getSpeedX() {
         return speedX;
@@ -68,6 +69,14 @@ public class Ghosts extends Item{
     
     public boolean isAction() {
         return action;
+    }
+    
+    public int getMoved() {
+        return moved;
+    }
+    
+    public void setMoved(int moved) {
+        this.moved = moved;
     }
     
     @Override

@@ -18,9 +18,9 @@ public class Timer {
     /**
      * starting the timer
      */
-    public Timer(int max){
+    public Timer(double max){
         timer = 0; 
-        this.max = max*1000;
+        this.max = (int) max*1000;
             //getting the initial time
         lastTime = System.currentTimeMillis(); 
         action = false;

@@ -241,6 +241,7 @@ public class Game implements Runnable {
                     // if paused, show pause image
                     // show save, load and continue options
                 if (this.getKeyManager().pause) {
+                    g.setColor(Color.white);
                     g.drawImage(Assets.pauseImage, (width / 2) - 150, 
                             (height / 2) - 150, 300, 300, null);
                     g.drawString("PRESS 'P' TO CONTINUE",
@@ -250,12 +251,14 @@ public class Game implements Runnable {
                     g.drawString("PRESS 'L' TO LOAD",
                             (width / 2) - 45, (height / 2) + 200);
                 }
-                
                 //set font styles
                 Font font1 = new Font("SansSerif", Font.BOLD, 20);
                 g.setFont(font1);
-                //display lives
+                g.setColor(Color.white);
+                //display lives and score
                 g.drawString("LIVES: " + lives, 20, this.getHeight() - 20);
+                g.drawString("SCORE: " + score, this.getWidth() - 130,
+                        this.getHeight() - 20);
             } else {
                 //Show image of game over
                 if (lives == 0) {

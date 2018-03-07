@@ -329,6 +329,7 @@ public class Game implements Runnable {
      */
     private void restart() {
         lives = 3;
+        score = 0;
         gameOver = false;
         player = new Player(getWidth() / 2 - 50, getHeight() - 100, 
                 100, 100, this);

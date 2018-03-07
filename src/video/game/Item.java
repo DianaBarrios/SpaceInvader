@@ -5,8 +5,10 @@ import java.awt.Rectangle;
 
 /**
  *
- * @author diana.barrios NissimBetesh
+ * @author diana.barrios 
+ * @author NissimBetesh
  */
+
 public abstract class Item {
     protected int x;                    // to store x position
     protected int y;                    // to store y position

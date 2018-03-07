@@ -40,12 +40,12 @@ public class Files {
             int speedX = Integer.parseInt(parts[2]);
             
             GhostCont ghostCont = game.getGhostsCont();
-            //GhostCont ghostCont = new GhostCont(game);
             game.getGhostsCont().setCant(numGhosts);
             
                 // add ghosts to list
             for (int i = 0; i < 12; i++){
                 for(int j = 0; j < 5; j++) {
+                        // read line with the position of the ghost
                     line = br.readLine();
                     parts = line.split(",");
                     if(!"dead".equals(line)) {
@@ -63,11 +63,11 @@ public class Files {
             }
             
             
-            // get the enemy bullets
+                // get the enemy bullets
             line = br.readLine();
             int size = Integer.parseInt(line);
             game.getEnemyShot().clear();
-
+            
             for(int i = 0; i < size; i++) {
                 line = br.readLine();
                 parts = line.split(",");
@@ -76,7 +76,7 @@ public class Files {
                 game.getEnemyShot().add(new Bullet(x,y,10,10,game,3));
             }
 
-            // load player bullets
+                // load player bullets
             line = br.readLine();
             size = Integer.parseInt(line);
             game.getBullets().clear();
@@ -88,7 +88,7 @@ public class Files {
                 int y = Integer.parseInt(parts[1]);
                 game.getBullets().add(new Bullet(x,y,10,10,game,-3));
             }
-            
+                // load score and  lives
             line = br.readLine();
             parts = line.split(",");
             int score = Integer.parseInt(parts[0]);

@@ -9,19 +9,19 @@ import java.awt.Graphics;
 
 public class Ghosts extends Item{
     private Game game;
-    private int speedX;     //x speed of ghosts
-    private int moved;
-    private int type;
-    private Timer timer;
-    private boolean action;
-    private Animation animationRed;
-    private Animation animationPink;
-    private Animation animationBlue;
-    private Animation animationOrange;
-    private Animation animationRedReverse;
-    private Animation animationPinkReverse;
-    private Animation animationBlueReverse;
-    private Animation animationOrangeReverse;
+    private int speedX;     //  x speed of ghosts
+    private int moved;      // distance moved
+    private int type;       // type of enemy
+    private Timer timer;    // timer to calculate when to shoot next
+    private boolean action;                         // store if action is to be done
+    private Animation animationRed;                 // animation for red enemy
+    private Animation animationPink;                // animation for pink enemy
+    private Animation animationBlue;                // animation for blue enemy 
+    private Animation animationOrange;              // animation for orange enemy
+    private Animation animationRedReverse;          // reverse animation for red
+    private Animation animationPinkReverse;         // reverse animation for pink
+    private Animation animationBlueReverse;         // reverse animation for blue
+    private Animation animationOrangeReverse;       // reverse animation for orange
  
     
     /**
@@ -38,7 +38,9 @@ public class Ghosts extends Item{
         this.game = game;
         this.speedX = speedX;
         moved = 0;
+            // randomize type of enemy
         type = (int) (Math.random()*4);
+            // set animation to use
         if(type == 0) {
             this.animationRed = new Animation(Assets.ghostRed, 100);
             this.animationRedReverse = new Animation(Assets.ghostRedInverse, 100);
@@ -58,23 +60,42 @@ public class Ghosts extends Item{
         timer = new Timer((int) (Math.random()*7 + 3));
     }
     
-
+    /**
+     * get horizontal speed
+     * @return <code>int</code> value of speed
+     */
     public int getSpeedX() {
         return speedX;
     }
 
+    /**
+     * set the horizontal speed of enemy
+     * @param speedX <code>int</code> value of new speed
+     */
     public void setSpeedX(int speedX) {
         this.speedX = speedX;
     }    
     
+    /**
+     * get if action will be done
+     * @return <code>boolean</code> value of whether the action will be done
+     */
     public boolean isAction() {
         return action;
     }
     
+    /**
+     * get distance moved
+     * @return <code>int</code> value of the distance moved
+     */
     public int getMoved() {
         return moved;
     }
     
+    /**
+     * set the distance moved
+     * @param moved <code>int</code> new value of moved
+     */
     public void setMoved(int moved) {
         this.moved = moved;
     }
@@ -86,12 +107,14 @@ public class Ghosts extends Item{
         setX(getX() + speedX);
         moved += speedX;
         
+            // if distance to be moved is max, move the enemies one step and invert speed
         if(Math.abs(moved) >= game.getMoveDist()) {
             moved = 0;
             setY(getY() + 5);
             speedX = -speedX;
         }
         
+            // animate animation according to type
         if(type == 0) {
             this.animationRed.tick();
             this.animationRedReverse.tick();

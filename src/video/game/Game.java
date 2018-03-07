@@ -31,10 +31,8 @@ public class Game implements Runnable {
     private int lives;                      // number of lives for the player
     private int score;                      // player score
     private int moveDist;                   // ghosts horizontal distance
-    private int ghostCol;
-    private int ghostRow;
-
-
+    private int ghostCol;                   // col of the ghost array
+    private int ghostRow;                   //  row of the ghost array
     private SoundClip pacmanLoosesLive;     //to use sound of loosing lives
     private SoundClip pacmanKillsGhost;     //to use sound of ghost killed
     private SoundClip pacmanRestart;     //to use sound of restart game
@@ -71,7 +69,7 @@ public class Game implements Runnable {
     private void init() {
         display = new Display(title, getWidth(), getHeight());
         Assets.init();
-            // generar player
+        // generate player and ghosts
         player = new Player(getWidth() / 2 - 50, getHeight() - 100, 100, 100, this);
         ghosts = new ArrayList<Ghosts>();
         //create ghosts
@@ -392,7 +390,6 @@ public class Game implements Runnable {
     public synchronized void start() {
         if (!running) {
             running = true;
-            //pauseGame = false;
             thread = new Thread(this);
             thread.start();
         }

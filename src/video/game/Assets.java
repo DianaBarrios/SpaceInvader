@@ -24,6 +24,7 @@ public class Assets {
     public static BufferedImage pauseImage;             //to store the pause image
     public static BufferedImage win;                    //to store victory image
     public static BufferedImage fail;                   //to store fail image
+    public static BufferedImage ufo[];                  //to store the ufo
     
     
     
@@ -51,6 +52,8 @@ public class Assets {
         ghostBlueInverse = new BufferedImage[2];
         ghostOrangeInverse = new BufferedImage[2];
         
+        ufo = new BufferedImage[2];
+        
         //cropping the pictures from the sheet into the array
         for (int i = 0; i < 2; i++){
             playerRight[i] = spritesheet.crop(i * 17, 0, 16, 16);
@@ -64,6 +67,7 @@ public class Assets {
             ghostPinkInverse[i] = spritesheet.crop((i * 17) + 33, 80, 16, 16);
             ghostBlueInverse[i] = spritesheet.crop((i * 17) + 33 , 96, 16, 16);
             ghostOrangeInverse[i] = spritesheet.crop((i * 17) + 33, 112, 16, 16);
+            ufo[i]= spritesheet.crop((i*15) + 163, 64, 15, 17);
         }
     }
 }

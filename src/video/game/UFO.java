@@ -26,26 +26,31 @@ public class UFO extends Item {
         this.game = game;
         start();
         alive = false;
-        timer = new  Timer(Math.random()*10+3);
-        this.setX (left ? 0 : game.getWidth() - this.getWidth());
+        timer = new  Timer(Math.random()*11+4);
+        this.setX (left ? 0 : game.getWidth() - width);
         this.animationUFO = new Animation(Assets.ufo, 100);
     }
     
     private void start() {
-        left = (Math.random()*2 + 1) <=1 ? true : false;
+        left = (Math.random()*3 + 1) <= 2 ? true : false;
         if(left) {
-            speedX = 3;
+            speedX = 2;
         }
         else {
-            speedX = -3;
+            speedX = -2;
         }
         int[] scores = new int[]{50,100,150};
         score = scores[(int) (Math.random()*2)];
         
     }
     
+    public int getScore() {
+        return score;
+    }
+    
     public void die() {
         alive = false;
+        timer = new Timer(Math.random()*11+4);
     }
 
     @Override
@@ -53,16 +58,19 @@ public class UFO extends Item {
         if(timer.isAction()) {
             alive = true;
             start();
-            this.setX (left ? 0 : game.getWidth() - this.getWidth());
+            this.setX (left ? 0 : game.getWidth() - this.getWidth()-2);
+            timer.tick();
         }
         if(!alive) {
-           timer = new Timer(Math.random()*10+3);
            this.setX(game.getWidth());
            speedX = 0;
+           timer.tick();
         }
         setX(getX() + speedX);
-        timer.tick();
         animationUFO.tick();
+        if(this.getX() < - getWidth() || getX() > game.getWidth() + 10) {
+            die();
+        }
     }
 
     @Override

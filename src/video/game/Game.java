@@ -27,6 +27,7 @@ public class Game implements Runnable {
     private ArrayList<Bullet> enemyShot;    // enemy shots taken
     private ArrayList<Protectors> protectors; // to store protectors
     private GhostCont ghostsCont;           // matrix storing ghosts
+    private UFO ufo;
     private KeyManager keyManager;          // to manage the keyboard
     private boolean gameOver;               // to end the game
     private int lives;                      // number of lives for the player
@@ -71,7 +72,7 @@ public class Game implements Runnable {
         Assets.init();
             // generate player and ghosts
         player = new Player(getWidth() / 2 - 50, getHeight() - 100, 100, 100, this);
-        
+        ufo = new UFO(this.getWidth(), 5, 40, 40, this);
         ghostsCont = new GhostCont(this);
         ghostCol = 12;
         ghostRow = 5;
@@ -149,6 +150,7 @@ public class Game implements Runnable {
         }
         
         player.tick();
+        ufo.tick();
             // move ghosts
         for(int i = 0; i < ghostCol; i++) {
             for(int j = 0; j < ghostRow; j++) {
@@ -193,6 +195,11 @@ public class Game implements Runnable {
                     // remove bullet
                     bullets.remove(i);
                 }
+            }
+            
+            if(bullet.intersects(ufo)) {
+                ufo.die();
+                score += ufo.getScore();
             }
                 // erase bullet if it leaves bounds
             if(bullet.getY() <= 0) {
@@ -264,7 +271,7 @@ public class Game implements Runnable {
                     g.setColor(Color.red);
                     bullet.render(g);
                 }
-                
+                ufo.render(g);
                 for(Protectors protector : protectors) {
                     protector.render(g);
                 }

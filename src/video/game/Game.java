@@ -154,13 +154,7 @@ public class Game implements Runnable {
         
         player.tick();
         
-        //create bullet 20px wide, 20px high
-        if(keyManager.space) {
-            bullets.add(new Bullet(player.getX()+player.getWidth()/2-10, 
-                    player.getY()-10, 10, 10, this, -3));
-            //play player shoots sound
-            pacmanShoots.play();
-        }
+        
         for(int i = 0; i < ghostCol; i++) {
             for(int j = 0; j < ghostRow; j++) {
                 Ghosts ghost = ghostsCont.getGhost(i, j);
@@ -173,15 +167,6 @@ public class Game implements Runnable {
                 }
             }
         }
-        /*
-        for(Ghosts ghost : ghosts) {
-            ghost.tick();
-            if (ghost.isAction()) {
-                enemyShot.add(new Bullet(ghost.getX()+ghost.getWidth()/2-10, 
-                        ghost.getY()+ghost.getHeight(),10,10,this,3));
-            }
-        }
-        */
         //move bullets
         for(int i = 0; i < bullets.size(); i++) {
             Bullet bullet = (Bullet) bullets.get(i);
@@ -204,25 +189,6 @@ public class Game implements Runnable {
                 bullets.remove(i);
                 --i;
             }
-            /*
-            for(int j = 0; j < ghosts.size(); j++) {
-                Ghosts ghost = (Ghosts) ghosts.get(j);
-                if(bullet.intersects(ghost)) {
-                    //play pacman kills ghost sound
-                    pacmanKillsGhost.play();
-                    score += 10;
-                    ghosts.remove(j);
-                    bullets.remove(i);
-                    --i;
-                    --j;
-                    break;
-                }
-                if(ghost.getY() <= 0) {
-                    ghosts.remove(j);
-                    --j;
-                }
-            }
-            */
         }
         
         for(int i = 0; i < enemyShot.size(); i++) {
@@ -278,10 +244,6 @@ public class Game implements Runnable {
                     g.setColor(Color.red);
                     bullet.render(g);
                 }
-                /*
-                for(Ghosts ghost : ghosts) {
-                    ghost.render(g);
-                }*/
                 for(int i = 0; i < ghostCol; i++) {
                     for(int j = 0; j < ghostRow; j++) {
                         if(ghostsCont.getGhost(i, j) != null) {
@@ -346,6 +308,14 @@ public class Game implements Runnable {
         }
         bullets = new ArrayList<Bullet>();
         enemyShot = new ArrayList<Bullet>();
+    }
+    
+    public void shoot() {
+        //create bullet 20px wide, 20px high
+            bullets.add(new Bullet(player.getX()+player.getWidth()/2-10, 
+                    player.getY()-10, 10, 10, this, -3));
+            //play player shoots sound
+            pacmanShoots.play();
     }
 
     /**

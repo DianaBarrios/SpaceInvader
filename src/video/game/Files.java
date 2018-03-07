@@ -8,8 +8,10 @@ import java.io.PrintWriter;
 
 /**
  *
- * @author diana.barrios NissimBetesh
+ * @author diana.barrios 
+ * @author NissimBetesh
  */
+
 public class Files {
     
     public static void loadFile(Game game){

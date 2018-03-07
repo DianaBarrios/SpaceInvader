@@ -3,9 +3,10 @@ package video.game;
 import java.awt.Graphics;
 
 /**
- *
- * @author diana.barrios NissimBetesh
+ * @author diana.barrios 
+ * @author NissimBetesh
  */
+
 class Bullet extends Item {
     private Game game;
     private int speedY;

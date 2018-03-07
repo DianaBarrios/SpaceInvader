@@ -6,8 +6,10 @@ import javax.imageio.ImageIO;
 
 /**
  *
- * @author diana.barrios NissimBetesh
+ * @author diana.barrios 
+ * @author NissimBetesh
  */
+
 public class ImageLoader {
     
    /**

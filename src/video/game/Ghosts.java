@@ -1,22 +1,19 @@
 package video.game;
 
 /**
- *
- * @author diana.barrios NissimBetesh
+ * @author diana.barrios 
+ * @author NissimBetesh
  */
 
 import java.awt.Graphics;
 
-
 public class Ghosts extends Item{
     private Game game;
-    private int speedX;
+    private int speedX;     //x speed of ghosts
     private int moved;
     private int type;
-    
     private Timer timer;
     private boolean action;
-    
     private Animation animationRed;
     private Animation animationPink;
     private Animation animationBlue;

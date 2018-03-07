@@ -160,6 +160,10 @@ public class Game implements Runnable {
                         enemyShot.add(new Bullet(ghost.getX()+ghost.getWidth()/2-10, 
                         ghost.getY()+ghost.getHeight(),10,10,this,3));
                     }
+                    if(ghost.intersects(player)) {
+                        gameOver = true;
+                        lives = 0;
+                    }
                 }
             }
         }
@@ -228,7 +232,7 @@ public class Game implements Runnable {
             // game over on no lives or no bricks
         if (ghostsCont.getCant() <= 0 || lives <= 0) {
             gameOver = true;
-        }    
+        }
     }
     
     /**
@@ -261,8 +265,8 @@ public class Game implements Runnable {
                     bullet.render(g);
                 }
                 
-                for(Protectors protectors : protectors) {
-                    protectors.render(g);
+                for(Protectors protector : protectors) {
+                    protector.render(g);
                 }
                 
              for(int i = 0; i < ghostCol; i++) {

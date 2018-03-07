@@ -61,7 +61,7 @@ public class Player extends Item {
         if(action && game.getKeyManager().space) {
             game.shoot();
                 // new timer to count
-            timer = new Timer(1);
+            timer = new Timer(0.6);
             action = false;
         }
             // moving player animation depending on flags
@@ -86,6 +86,11 @@ public class Player extends Item {
         timer.tick();
     }
         
+    public boolean intersectsGhost(Object obj) {        
+        return (obj instanceof Ghosts && 
+            this.getBounds().intersects(((Item) obj).getBounds()));
+    }
+    
     @Override
     public void render(Graphics g) {
         //display pacman

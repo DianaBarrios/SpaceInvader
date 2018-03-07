@@ -3,9 +3,10 @@ package video.game;
 import java.awt.image.BufferedImage;
 
 /**
- *
- * @author diana.barrios NissimBetesh
+ * @author diana.barrios 
+ * @author NissimBetesh
  */
+
 public class Assets {
     public static BufferedImage background;             //to store background image
     public static BufferedImage sprites;                //to store the sprites

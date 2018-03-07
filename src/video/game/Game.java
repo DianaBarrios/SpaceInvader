@@ -295,8 +295,8 @@ public class Game implements Runnable {
                     // show save, load and continue options
                 if (this.getKeyManager().pause) {
                     g.setColor(Color.white);
-                    g.drawImage(Assets.pauseImage, (width / 2) - 150, 
-                            (height / 2) - 150, 300, 300, null);
+                    g.drawImage(Assets.pauseImage, (width / 2) - 300, 
+                            (height / 2) - 130, 600, 300, null);
                     g.drawString("PRESS 'P' TO CONTINUE",
                             (width / 2) - 60, (height / 2) + 160);
                     g.drawString("PRESS 'S' TO SAVE",

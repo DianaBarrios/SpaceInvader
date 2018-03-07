@@ -4,8 +4,10 @@ import java.awt.image.BufferedImage;
 
 /**
  *
- * @author diana.barrios NissimBetesh
+ * @author diana.barrios 
+ * @author NissimBetesh
  */
+
 public class Animation {
     private int speed;              //for the speed of every frame
     private int index;              //to get the index of next frame to paint
